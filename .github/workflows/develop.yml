@@ -39,4 +39,4 @@ jobs:
         uses: goreleaser/goreleaser-action@v4
         with:
           args: -p 3 release --snapshot --clean
-          version: latest
+#          version: ${{ steps.release.outputs.version }}
