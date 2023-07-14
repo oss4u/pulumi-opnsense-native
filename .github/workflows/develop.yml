@@ -31,6 +31,7 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: ${{matrix.goversion}}
+          cache: true
       - name: Install pulumictl
         uses: jaxxstorm/action-install-gh-release@v1.10.0
         with:
@@ -38,5 +39,6 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
-          args: -p 3 release --snapshot --clean
-          version: ${{ steps.release.outputs.version }}
+          distribution: goreleaser
+          args: release --clean --snapshot
+          version: latest
