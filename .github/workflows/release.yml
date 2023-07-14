@@ -52,6 +52,10 @@ jobs:
         with:
           args: -p 3 release --clean
           version: latest
+      - name: DEBUG
+        run: |
+          ls -l
+          ls -l bin/*
       - uses: actions/upload-artifact@v2
         with:
           name: pulumi-resource
