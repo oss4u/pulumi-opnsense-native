@@ -1,5 +1,5 @@
 {
-    "name": "oss4u/opnsense",
+    "name": "@oss4u/opnsense",
     "version": "${VERSION}",
     "scripts": {
         "build": "tsc",
