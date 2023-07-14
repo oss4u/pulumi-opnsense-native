@@ -52,10 +52,7 @@ jobs:
         with:
           args: -p 3 release --clean
           version: latest
-      - uses: actions/upload-artifact@v3
-        with:
-          name: pulumi-resource
-          path: bin/
+
     strategy:
       fail-fast: true
       matrix:
@@ -80,18 +77,14 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v2.0.0
-      - uses: actions/download-artifact@v3
-        with:
-          name: pulumi-resource
-          path: bin/
-      - name: Make Executable
-        run: |
-          chmod +x bin/*
+      - name: Make Build
+        run: make build
       - name: DEBUG
         run: |
           pwd
           ls -l
           ls -l dist/*
+          ls -l bin/*
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
