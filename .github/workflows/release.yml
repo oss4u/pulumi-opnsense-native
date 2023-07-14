@@ -124,7 +124,7 @@ jobs:
         with:
           user: __token__
           password: ${{ env.PYPI_PASSWORD }}
-          packages_dir: sdk/
+          packages_dir: dist/
       - if: ${{ matrix.language == 'nodejs' && env.PUBLISH_NPM == 'true' }}
         uses: JS-DevTools/npm-publish@v1
         with:
