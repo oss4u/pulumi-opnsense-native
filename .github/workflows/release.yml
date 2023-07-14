@@ -54,6 +54,7 @@ jobs:
           version: latest
       - name: DEBUG
         run: |
+          pwd
           ls -l
           ls -l bin/*
       - uses: actions/upload-artifact@v2
@@ -87,6 +88,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: pulumi-resource
+      - name: DEBUG
+        run: |
+          pwd
+          ls -l
+          ls -l bin/*
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
