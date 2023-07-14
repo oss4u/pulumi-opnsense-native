@@ -52,6 +52,10 @@ jobs:
         with:
           args: -p 3 release --clean
           version: latest
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pulumi-resource
+          path: bin/pulumi-resource-${{ env.PROVIDER }}
     strategy:
       fail-fast: true
       matrix:
@@ -76,6 +80,9 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v2.0.0
+      - uses: actions/download-artifact@v2
+        with:
+          name: pulumi-resource
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
