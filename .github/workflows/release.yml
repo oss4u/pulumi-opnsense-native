@@ -5,7 +5,7 @@ on:
       - v*.*.*
       - '!v*.*.*-**'
 env:
-  PROVIDER: "YOUR PROVIDER NAME HERE eg: opnsense"
+  PROVIDER: "opnsense"
   # THIS GITHUB_TOKEN IS A REQUIREMENT TO BE ABLE TO WRITE TO GH RELEASES
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # IF YOU NEED TO PUBLISH A NPM PACKAGE THEN ENSURE A NPM_TOKEN SECRET IS SET
@@ -50,7 +50,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
-          args: -p 3 release --rm-dist
+          args: -p 3 release --clean
           version: latest
     strategy:
       fail-fast: true
@@ -131,7 +131,7 @@ jobs:
         dotnetversion:
           - 3.1.301
         goversion:
-          - 1.18.x
+          - 1.20.x
         language:
           - nodejs
           - python
@@ -140,4 +140,4 @@ jobs:
         nodeversion:
           - 14.x
         pythonversion:
-          - "3.9"
+          - "3.10"

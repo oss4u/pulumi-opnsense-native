@@ -6,7 +6,6 @@ on:
 
 env:
   PROVIDER: "opnsense"
-  # THIS GITHUB_TOKEN IS A REQUIREMENT TO BE ABLE TO WRITE TO GH RELEASES
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
@@ -32,12 +31,14 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{matrix.goversion}}
+          cache: true
       - name: Install pulumictl
         uses: jaxxstorm/action-install-gh-release@v1.10.0
         with:
           repo: pulumi/pulumictl
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v4
-        with:
-          args: -p 3 --clean
-          version: ${{ steps.release.outputs.version }}
+#      - name: Run GoReleaser
+#        uses: goreleaser/goreleaser-action@v4
+#        with:
+#          distribution: goreleaser
+#          args: release --clean --snapshot --skip-publish
+#          version: latest
