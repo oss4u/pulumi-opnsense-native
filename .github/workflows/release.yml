@@ -83,7 +83,6 @@ jobs:
         run: |
           pwd
           ls -l
-          ls -l dist/*
           ls -l bin/*
       - name: Setup Node
         uses: actions/setup-node@v1
