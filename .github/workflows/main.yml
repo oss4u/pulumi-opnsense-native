@@ -1,0 +1,52 @@
+name: main
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PROVIDER: "opnsense"
+  # THIS GITHUB_TOKEN IS A REQUIREMENT TO BE ABLE TO WRITE TO GH RELEASES
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: check conventional commit compliance
+    strategy:
+      fail-fast: true
+      matrix:
+        goversion:
+          - 1.20.x
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Unshallow clone for tags
+        run: git fetch --prune --unshallow --tags
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{matrix.goversion}}
+      - name: Install pulumictl
+        uses: jaxxstorm/action-install-gh-release@v1.10.0
+        with:
+          repo: pulumi/pulumictl
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          args: -p 3 --clean
+          version: latest
+  version:
+    runs-on: ubuntu-latest
+    name: version
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Semver release
+        id: release
+        uses: cocogitto/cocogitto-action@v3.5
+        with:
+          release: true
+          git-user: 'github-actions'
+          git-user-email: 'github-actions@github.com'
