@@ -38,5 +38,5 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
-          args: -p 3 --clean
-          version: ${{ steps.release.outputs.version }}
+          args: -p 3 release --snapshot --clean
+          version: latest
