@@ -12,17 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go run ./generate.go
+package version
 
-package main
-
-import (
-	"github.com/pulumi/pulumi-opnsense/pkg/provider"
-	"github.com/pulumi/pulumi-opnsense/pkg/version"
-)
-
-var providerName = "opnsense"
-
-func main() {
-	provider.Serve(providerName, version.Version, pulumiSchema)
-}
+// Version is initialized by the Go linker to contain the semver of this build.
+var Version string = "0.0.1"

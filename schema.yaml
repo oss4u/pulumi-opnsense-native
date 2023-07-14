@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/pulumi/pulumi/master/pkg/codegen/schema/pulumi.json
+---
+name: opnsense
+resources:
+  opnsense:index:StaticPage:
+    isComponent: true
+    inputProperties:
+      indexContent:
+        type: string
+        description: The HTML content for index.html.
+    requiredInputs:
+      - indexContent
+    properties:
+      bucket:
+        "$ref": "/aws/v4.0.0/schema.json#/resources/aws:s3%2Fbucket:Bucket"
+        description: The bucket resource.
+      websiteUrl:
+        type: string
+        description: The website URL.
+    required:
+      - bucket
+      - websiteUrl
+language:
+  csharp:
+    packageReferences:
+      Pulumi: 3.*
+      Pulumi.Aws: 4.*
+  go:
+    generateResourceContainerTypes: true
+    importBasePath: github.com/pulumi/pulumi-opnsense/sdk/go/opnsense
+  nodejs:
+    dependencies:
+      "@pulumi/aws": "^4.0.0"
+    devDependencies:
+      "@types/node": "^14"
+      typescript: "^4.3.5"
+  python:
+    requires:
+      pulumi: ">=3.0.0,<4.0.0"
+      pulumi-aws: ">=4.0.0,<5.0.0"

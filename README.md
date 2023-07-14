@@ -1,95 +1,166 @@
-# Pulumi Native Provider Boilerplate
+# Pulumi Component Provider Boilerplate (Go)
 
-This repository is a boilerplate showing how to create a native Pulumi provider.
+This repo is a boilerplate showing how to create a Pulumi component provider written in Go. You can search-replace `opnsense` with the name of your desired provider as a starting point for creating a component provider for your component resources.
 
-## Authoring a Pulumi Native Provider
+## Background
+This repository is part of the [guide for authoring and publishing a Pulumi Package](https://www.pulumi.com/docs/guides/pulumi-packages/how-to-author).
 
-This boilerplate creates a working Pulumi-owned provider named `opnsense`.
-It implements a random number generator that you can [build and test out for yourself](#test-against-the-example) and then replace the Random code with code specific to your provider.
+Learn about the concepts behind [Pulumi Packages](https://www.pulumi.com/docs/guides/pulumi-packages/#pulumi-packages) and, more specifically, [Pulumi Components](https://www.pulumi.com/docs/intro/concepts/resources/components/)
 
+## Sample opnsense Component Provider
 
-### Prerequisites
+An example `StaticPage` [component resource](https://www.pulumi.com/docs/intro/concepts/resources/#components) is available in `provider/pkg/provider/staticPage.go`. This component creates a static web page hosted in an AWS S3 Bucket. There is nothing special about `StaticPage` -- it is a typical component resource written in Go.
 
-Ensure the following tools are installed and present in your `$PATH`:
+The component provider makes component resources available to other languages. The implementation is in `provider/pkg/provider/provider.go`. Each component resource in the provider must have an implementation in the `Construct` function to create an instance of the requested component resource and return its `URN` and state (outputs). There is an initial implementation that demonstrates an implementation of `Construct` for the example `StaticPage` component.
 
-* [`pulumictl`](https://github.com/pulumi/pulumictl#installation)
-* [Go 1.17](https://golang.org/dl/) or 1.latest
-* [NodeJS](https://nodejs.org/en/) 14.x.  We recommend using [nvm](https://github.com/nvm-sh/nvm) to manage NodeJS installations.
-* [Yarn](https://yarnpkg.com/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Python](https://www.python.org/downloads/) (called as `python3`).  For recent versions of MacOS, the system-installed version is fine.
-* [.NET](https://dotnet.microsoft.com/download)
+A code generator is available which generates SDKs in TypeScript, Python, Go and .NET which are also checked in to the `sdk` folder. The SDKs are generated from a schema in `schema.yaml`. This file should be kept aligned with the component resources supported by the component provider implementation.
 
+An example of using the `StaticPage` component in TypeScript is in `examples/simple`.
 
-### Creating and Initializing the Repository
+Note that the generated provider plugin (`pulumi-resource-opnsense`) must be on your `PATH` to be used by Pulumi deployments. If creating a provider for distribution to other users, you should ensure they install this plugin to their `PATH`.
 
-Pulumi offers this repository as a [GitHub template repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for convenience.  From this repository:
+## Prerequisites
 
-1. Click "Use this template".
-1. Set the following options:
-   * Owner: pulumi 
-   * Repository name: pulumi-opnsense-native (replace "opnsense" with the name of your provider)
-   * Description: Pulumi provider for opnsense
-   * Repository type: Public
-1. Clone the generated repository.
+- Go 1.17
+- Pulumi CLI
+- Node.js (to build the Node.js SDK)
+- Yarn (to build the Node.js SDK)
+- Python 3.6+ (to build the Python SDK)
+- .NET Core SDK (to build the .NET SDK)
 
-From the templated repository:
+## Build and Test
 
-1. Search-replace `opnsense` with the name of your desired provider.
-
-#### Build the provider and install the plugin
-
-   ```bash
-   $ make build install
-   ```
-   
-This will:
-
-1. Create the SDK codegen binary and place it in a `./bin` folder (gitignored)
-2. Create the provider binary and place it in the `./bin` folder (gitignored)
-3. Generate the dotnet, Go, Node, and Python SDKs and place them in the `./sdk` folder
-4. Install the provider on your machine.
-
-#### Test against the example
-   
 ```bash
+# Build and install the provider (plugin copied to $GOPATH/bin)
+make install_provider
+
+# Regenerate SDKs
+make generate
+
+# Test Node.js SDK
+$ make install_nodejs_sdk
 $ cd examples/simple
-$ yarn link @pulumi/opnsense
 $ yarn install
+$ yarn link @pulumi/opnsense
 $ pulumi stack init test
+$ pulumi config set aws:region us-east-1
 $ pulumi up
 ```
 
-Now that you have completed all of the above steps, you have a working provider that generates a random string for you.
+## Naming
 
-#### A brief repository overview
+The `opnsense` provider's plugin binary must be named `pulumi-resource-opnsense` (in the format `pulumi-resource-<provider>`).
 
-You now have:
-
-1. A `provider/` folder containing the building and implementation logic
-    1. `cmd/pulumi-resource-opnsense/main.go` - holds the provider's sample implementation logic.
-2. `deployment-templates` - a set of files to help you around deployment and publication
-3. `sdk` - holds the generated code libraries created by `pulumi-gen-opnsense/main.go`
-4. `examples` a folder of Pulumi programs to try locally and/or use in CI.
-5. A `Makefile` and this `README`.
-
-#### Additional Details
-
-This repository depends on the pulumi-go-provider library. For more details on building providers, please check
-the [Pulumi Go Provider docs](https://github.com/pulumi/pulumi-go-provider).
-
-### Build Examples
-
-Create an example program using the resources defined in your provider, and place it in the `examples/` folder.
-
-You can now repeat the steps for [build, install, and test](#test-against-the-example).
+While the provider plugin must follow this naming convention, the SDK package naming can be customized. TODO explain.
 
 ## Configuring CI and releases
 
 1. Follow the instructions laid out in the [deployment templates](./deployment-templates/README-DEPLOYMENT.md).
 
-## References
+## Example component
 
-Other resources/examples for implementing providers:
-* [Pulumi Command provider](https://github.com/pulumi/pulumi-command/blob/master/provider/pkg/provider/provider.go)
-* [Pulumi Go Provider repository](https://github.com/pulumi/pulumi-go-provider)
+Let's look at the example `StaticPage` component resource in more detail.
+
+### Schema
+
+The example `StaticPage` component resource is defined in `schema.yaml`:
+
+```yaml
+resources:
+  opnsense:index:StaticPage:
+    isComponent: true
+    inputProperties:
+      indexContent:
+        type: string
+        description: The HTML content for index.html.
+    requiredInputs:
+      - indexContent
+    properties:
+      bucket:
+        "$ref": "/aws/v4.0.0/schema.json#/resources/aws:s3%2Fbucket:Bucket"
+        description: The bucket resource.
+      websiteUrl:
+        type: string
+        description: The website URL.
+    required:
+      - bucket
+      - websiteUrl
+```
+
+The component resource's type token is `opnsense:index:StaticPage` in the format of `<package>:<module>:<type>`. In this case, it's in the `opnsense` package and `index` module. This is the same type token passed to `RegisterComponentResource` inside the implementation of `NewStaticPage` in `provider/pkg/provider/staticPage.go`, and also the same token referenced in `Construct` in `provider/pkg/provider/provider.go`.
+
+This component has a required `indexContent` input property typed as `string`, and two required output properties: `bucket` and `websiteUrl`. Note that `bucket` is typed as the `aws:s3/bucket:Bucket` resource from the `aws` provider (in the schema the `/` is escaped as `%2F`).
+
+Since this component returns a type from the `aws` provider, each SDK must reference the associated Pulumi `aws` SDK for the language. For the .NET, Node.js, and Python SDKs, dependencies are specified in the `language` section of the schema:
+
+```yaml
+language:
+  csharp:
+    packageReferences:
+      Pulumi: 3.*
+      Pulumi.Aws: 4.*
+  go:
+    generateResourceContainerTypes: true
+    importBasePath: github.com/pulumi/pulumi-opnsense/sdk/go/opnsense
+  nodejs:
+    dependencies:
+      "@pulumi/aws": "^4.0.0"
+    devDependencies:
+      typescript: "^3.7.0"
+  python:
+    requires:
+      pulumi: ">=3.0.0,<4.0.0"
+      pulumi-aws: ">=4.0.0,<5.0.0"
+```
+
+For the Go SDK, dependencies are specified in the `sdk/go.mod` file.
+
+### Implementation
+
+The implementation of this component is in `provider/pkg/provider/staticPage.go` and the structure of the component's inputs and outputs aligns with what is defined in `schema.yaml`:
+
+```go
+// The set of arguments for creating a StaticPage component resource.
+type StaticPageArgs struct {
+    IndexContent pulumi.StringInput `pulumi:"indexContent"`
+}
+
+// The StaticPage component resource.
+type StaticPage struct {
+    pulumi.ResourceState
+
+    Bucket     *s3.Bucket          `pulumi:"bucket"`
+    WebsiteUrl pulumi.StringOutput `pulumi:"websiteUrl"`
+}
+
+// NewStaticPage creates a new StaticPage component resource.
+func NewStaticPage(ctx *pulumi.Context, name string, args *StaticPageArgs, opts ...pulumi.ResourceOption) (*StaticPage, error) {
+    ...
+}
+```
+
+The provider makes this component resource available in the `construct` function in `provider/pkg/provider/provider.go`. When `construct` is called and the `typ` argument is `opnsense:index:StaticPage`, we create an instance of the `StaticPage` component resource and return its `URN` and state.
+
+```go
+func constructStaticPage(ctx *pulumi.Context, name string, inputs provider.ConstructInputs,
+    options pulumi.ResourceOption) (*provider.ConstructResult, error) {
+
+    // Copy the raw inputs to StaticPageArgs. `inputs.CopyTo` uses the types and `pulumi:` tags
+    // on the struct's fields to convert the raw values to the appropriate Input types.
+    args := &StaticPageArgs{}
+    if err := inputs.CopyTo(args); err != nil {
+        return nil, errors.Wrap(err, "setting args")
+    }
+
+    // Create the component resource.
+    staticPage, err := NewStaticPage(ctx, name, args, options)
+    if err != nil {
+        return nil, errors.Wrap(err, "creating component")
+    }
+
+    // Return the component resource's URN and state. `NewConstructResult` automatically sets the
+    // ConstructResult's state based on resource struct fields tagged with `pulumi:` tags with a value
+    // that is convertible to `pulumi.Input`.
+    return provider.NewConstructResult(staticPage)
+}
+```

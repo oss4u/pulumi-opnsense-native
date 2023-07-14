@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:generate go run ./generate.go
-
-package main
+package provider
 
 import (
-	"github.com/pulumi/pulumi-opnsense/pkg/provider"
-	"github.com/pulumi/pulumi-opnsense/pkg/version"
+	"github.com/pulumi/pulumi/pkg/v3/resource/provider"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/util/cmdutil"
 )
 
-var providerName = "opnsense"
-
-func main() {
-	provider.Serve(providerName, version.Version, pulumiSchema)
+// Serve launches the gRPC server for the resource provider.
+func Serve(providerName, version string, schema []byte) {
+	// Start gRPC service.
+	if err := provider.ComponentMain(providerName, version, schema, construct); err != nil {
+		cmdutil.ExitError(err.Error())
+	}
 }

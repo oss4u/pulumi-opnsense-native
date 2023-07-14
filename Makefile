@@ -1,107 +1,95 @@
-PROJECT_NAME := Pulumi opnsense Resource Provider
+VERSION         := 0.0.1
 
-PACK             := opnsense
-PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-opnsense
-NODE_MODULE_NAME := @pulumi/opnsense
-NUGET_PKG_NAME   := Pulumi.opnsense
+PACK            := opnsense
+PROJECT         := github.com/pulumi/pulumi-${PACK}
 
 PROVIDER        := pulumi-resource-${PACK}
-VERSION         ?= $(shell pulumictl get version)
-PROVIDER_PATH   := provider
-VERSION_PATH     := ${PROVIDER_PATH}/cmd/main.Version
-
-GOPATH			:= $(shell go env GOPATH)
+CODEGEN         := pulumi-gen-${PACK}
+VERSION_PATH    := provider/pkg/version.Version
 
 WORKING_DIR     := $(shell pwd)
-TESTPARALLELISM := 4
+SCHEMA_PATH     := ${WORKING_DIR}/schema.yaml
 
-ensure::
-	cd provider && go mod tidy
-	cd sdk && go mod tidy
-	cd tests && go mod tidy
+GOPATH          := $(shell go env GOPATH)
 
-provider::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+generate:: gen_go_sdk gen_dotnet_sdk gen_nodejs_sdk gen_python_sdk
 
-provider_debug::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+build:: build_provider build_dotnet_sdk build_nodejs_sdk build_python_sdk
 
-test_provider::
-	cd provider/pkg && go test -short -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM} ./...
+install:: install_provider install_dotnet_sdk install_nodejs_sdk
 
-dotnet_sdk:: DOTNET_VERSION := $(shell pulumictl get version --language dotnet)
-dotnet_sdk::
+
+# Provider
+
+build_provider::
+	rm -rf ${WORKING_DIR}/bin/${PROVIDER}
+	cd provider/cmd/${PROVIDER} && VERSION=${VERSION} SCHEMA=${SCHEMA_PATH} go generate main.go
+	cd provider/cmd/${PROVIDER} && go build -o ${WORKING_DIR}/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" .
+
+install_provider:: build_provider
+	cp ${WORKING_DIR}/bin/${PROVIDER} ${GOPATH}/bin
+
+
+# Go SDK
+
+gen_go_sdk::
+	rm -rf sdk/go
+	cd provider/cmd/${CODEGEN} && go run . go ../../../sdk/go ${SCHEMA_PATH}
+
+
+# .NET SDK
+
+gen_dotnet_sdk::
 	rm -rf sdk/dotnet
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language dotnet
-	cd ${PACKDIR}/dotnet/&& \
+	cd provider/cmd/${CODEGEN} && go run . dotnet ../../../sdk/dotnet ${SCHEMA_PATH}
+
+build_dotnet_sdk:: DOTNET_VERSION := ${VERSION}
+build_dotnet_sdk:: gen_dotnet_sdk
+	cd sdk/dotnet/ && \
 		echo "${DOTNET_VERSION}" >version.txt && \
 		dotnet build /p:Version=${DOTNET_VERSION}
 
-go_sdk:: $(WORKING_DIR)/bin/$(PROVIDER)
-	rm -rf sdk/go
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language go
+install_dotnet_sdk:: build_dotnet_sdk
+	rm -rf ${WORKING_DIR}/nuget
+	mkdir -p ${WORKING_DIR}/nuget
+	find . -name '*.nupkg' -print -exec cp -p {} ${WORKING_DIR}/nuget \;
 
-nodejs_sdk:: VERSION := $(shell pulumictl get version --language javascript)
-nodejs_sdk::
+
+# Node.js SDK
+
+gen_nodejs_sdk::
 	rm -rf sdk/nodejs
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language nodejs
-	cd ${PACKDIR}/nodejs/ && \
+	cd provider/cmd/${CODEGEN} && go run . nodejs ../../../sdk/nodejs ${SCHEMA_PATH}
+
+build_nodejs_sdk:: gen_nodejs_sdk
+	cd sdk/nodejs/ && \
 		yarn install && \
+		yarn run tsc --version && \
 		yarn run tsc && \
 		cp -R scripts/ bin && \
-		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
-		sed -i.bak 's/$${VERSION}/$(VERSION)/g' bin/package.json && \
+		cp ../../README.md ../../LICENSE package.json yarn.lock ./bin/ && \
+		sed -i.bak -e "s/\$${VERSION}/$(VERSION)/g" ./bin/package.json && \
 		rm ./bin/package.json.bak
 
-python_sdk:: PYPI_VERSION := $(shell pulumictl get version --language python)
-python_sdk::
+install_nodejs_sdk:: build_nodejs_sdk
+	yarn link --cwd ${WORKING_DIR}/sdk/nodejs/bin
+
+
+# Python SDK
+
+gen_python_sdk::
 	rm -rf sdk/python
-	pulumi package gen-sdk $(WORKING_DIR)/bin/$(PROVIDER) --language python
-	cp README.md ${PACKDIR}/python/
-	cd ${PACKDIR}/python/ && \
+	cd provider/cmd/${CODEGEN} && go run . python ../../../sdk/python ${SCHEMA_PATH}
+	cp ${WORKING_DIR}/README.md sdk/python
+
+build_python_sdk:: PYPI_VERSION := ${VERSION}
+build_python_sdk:: gen_python_sdk
+	cd sdk/python/ && \
 		python3 setup.py clean --all 2>/dev/null && \
 		rm -rf ./bin/ ../python.bin/ && cp -R . ../python.bin && mv ../python.bin ./bin && \
 		sed -i.bak -e 's/^VERSION = .*/VERSION = "$(PYPI_VERSION)"/g' -e 's/^PLUGIN_VERSION = .*/PLUGIN_VERSION = "$(VERSION)"/g' ./bin/setup.py && \
 		rm ./bin/setup.py.bak && \
 		cd ./bin && python3 setup.py build sdist
 
-.PHONY: build
-build:: provider dotnet_sdk go_sdk nodejs_sdk python_sdk
-
-# Required for the codegen action that runs in pulumi/pulumi
-only_build:: build
-
-lint::
-	for DIR in "provider" "sdk" "tests" ; do \
-		pushd $$DIR && golangci-lint run -c ../.golangci.yml --timeout 10m && popd ; \
-	done
-
-
-install:: install_nodejs_sdk install_dotnet_sdk
-	cp $(WORKING_DIR)/bin/${PROVIDER} ${GOPATH}/bin
-
-
-GO_TEST 	 := go test -v -count=1 -cover -timeout 2h -parallel ${TESTPARALLELISM}
-
-test_all::
-	cd provider/pkg && $(GO_TEST) ./...
-	cd tests/sdk/nodejs && $(GO_TEST) ./...
-	cd tests/sdk/python && $(GO_TEST) ./...
-	cd tests/sdk/dotnet && $(GO_TEST) ./...
-	cd tests/sdk/go && $(GO_TEST) ./...
-
-install_dotnet_sdk::
-	rm -rf $(WORKING_DIR)/nuget/$(NUGET_PKG_NAME).*.nupkg
-	mkdir -p $(WORKING_DIR)/nuget
-	find . -name '*.nupkg' -print -exec cp -p {} ${WORKING_DIR}/nuget \;
-
-install_python_sdk::
-	#target intentionally blank
-
-install_go_sdk::
-	#target intentionally blank
-
-install_nodejs_sdk::
-	-yarn unlink --cwd $(WORKING_DIR)/sdk/nodejs/bin
-	yarn link --cwd $(WORKING_DIR)/sdk/nodejs/bin
+## Empty build target for Go
+build_go_sdk::

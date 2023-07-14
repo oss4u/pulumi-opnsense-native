@@ -1,5 +1,8 @@
 import * as opnsense from "@pulumi/opnsense";
 
-const random = new opnsense.Random("my-random", { length: 24 });
+const page = new opnsense.StaticPage("page", {
+    indexContent: "<html><body><p>Hello world!</p></body></html>",
+});
 
-export const output = random.result;
+export const bucket = page.bucket;
+export const url = page.websiteUrl;

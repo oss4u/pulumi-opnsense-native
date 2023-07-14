@@ -5,6 +5,7 @@ on:
       - v*.*.*
       - '!v*.*.*-**'
 env:
+  PROVIDER: "opnsense"
   # THIS GITHUB_TOKEN IS A REQUIREMENT TO BE ABLE TO WRITE TO GH RELEASES
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # IF YOU NEED TO PUBLISH A NPM PACKAGE THEN ENSURE A NPM_TOKEN SECRET IS SET
@@ -83,6 +84,9 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v2.0.0
+      - uses: actions/download-artifact@v2
+        with:
+          name: pulumi-resource
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
@@ -96,8 +100,8 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{matrix.pythonversion}}
-      - name: Build SDK
-        run: make build_${{ matrix.language }}_sdk
+      - name: Generate SDK
+        run: make ${{ matrix.language }}_sdk
       - name: Check worktree clean
         run: |
           git update-index -q --refresh
@@ -138,7 +142,7 @@ jobs:
         dotnetversion:
           - 3.1.301
         goversion:
-          - 1.17.x
+          - 1.20.x
         language:
           - nodejs
           - python
@@ -147,4 +151,4 @@ jobs:
         nodeversion:
           - 14.x
         pythonversion:
-          - "3.9"
+          - "3.10"
