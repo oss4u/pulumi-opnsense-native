@@ -57,7 +57,7 @@ jobs:
           pwd
           ls -l
           ls -l bin/*
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: pulumi-resource
           path: bin/
@@ -85,9 +85,10 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v2.0.0
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: pulumi-resource
+          path: bin/
       - name: DEBUG
         run: |
           pwd
