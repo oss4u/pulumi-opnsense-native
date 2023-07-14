@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-xyz/sdk/v3
+module github.com/pulumi/pulumi-opnsense/sdk/v3
 
 go 1.17
 
