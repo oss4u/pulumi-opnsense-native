@@ -13,6 +13,7 @@
         "strict": true
     },
     "files": [
+        "hostOverride.ts",
         "index.ts",
         "provider.ts",
         "random.ts",

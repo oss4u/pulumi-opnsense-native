@@ -5,17 +5,19 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
+from .host_override import *
 from .provider import *
 from .random import *
 _utilities.register(
     resource_modules="""
 [
  {
-  "pkg": "xyz",
+  "pkg": "opnsense",
   "mod": "index",
-  "fqn": "pulumi_xyz",
+  "fqn": "pulumi_opnsense",
   "classes": {
-   "xyz:index:Random": "Random"
+   "opnsense:index:HostOverride": "HostOverride",
+   "opnsense:index:Random": "Random"
   }
  }
 ]
@@ -23,9 +25,9 @@ _utilities.register(
     resource_packages="""
 [
  {
-  "pkg": "xyz",
-  "token": "pulumi:providers:xyz",
-  "fqn": "pulumi_xyz",
+  "pkg": "opnsense",
+  "token": "pulumi:providers:opnsense",
+  "fqn": "pulumi_opnsense",
   "class": "Provider"
  }
 ]
