@@ -87,11 +87,11 @@ jobs:
       - name: Make Executable
         run: |
           chmod +x bin/*
-#      - name: DEBUG
-#        run: |
-#          pwd
-#          ls -l
-#          ls -l bin/*
+      - name: DEBUG
+        run: |
+          pwd
+          ls -l
+          ls -l dist/*
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
