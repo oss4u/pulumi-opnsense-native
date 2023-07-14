@@ -6,7 +6,6 @@ on:
 
 env:
   PROVIDER: "opnsense"
-  # THIS GITHUB_TOKEN IS A REQUIREMENT TO BE ABLE TO WRITE TO GH RELEASES
   GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
 
 jobs:
@@ -16,6 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
       - name: Semver release
         id: release
