@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: pulumi-resource
-          path: bin/pulumi-resource-${{ env.PROVIDER }}
+          path: bin/
     strategy:
       fail-fast: true
       matrix:
