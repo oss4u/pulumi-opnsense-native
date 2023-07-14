@@ -52,11 +52,6 @@ jobs:
         with:
           args: -p 3 release --clean
           version: latest
-      - name: DEBUG
-        run: |
-          pwd
-          ls -l
-          ls -l bin/*
       - uses: actions/upload-artifact@v3
         with:
           name: pulumi-resource
@@ -89,11 +84,14 @@ jobs:
         with:
           name: pulumi-resource
           path: bin/
-      - name: DEBUG
+      - name: Make Executable
         run: |
-          pwd
-          ls -l
-          ls -l bin/*
+          chmod +x bin/*
+#      - name: DEBUG
+#        run: |
+#          pwd
+#          ls -l
+#          ls -l bin/*
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
