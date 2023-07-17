@@ -29,7 +29,7 @@ env:
   PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
   PYPI_USERNAME: "oss4u"
   PYPI_REPOSITORY_URL: ""
-  PUBLISH_PYPI: true
+  PUBLISH_PYPI: false
 jobs:
   publish_binary:
     name: publish
