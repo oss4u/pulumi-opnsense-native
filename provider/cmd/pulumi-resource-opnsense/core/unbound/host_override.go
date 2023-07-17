@@ -1,4 +1,4 @@
-package main
+package unbound
 
 import (
 	p "github.com/pulumi/pulumi-go-provider"

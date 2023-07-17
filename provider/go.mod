@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-opnsense/provider
+module github.com/pulumi/pulumi-opnsense
 
 go 1.18
 

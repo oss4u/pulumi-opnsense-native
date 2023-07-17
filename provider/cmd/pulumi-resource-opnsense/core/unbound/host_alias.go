@@ -16,10 +16,10 @@ import (
 // - Delete: Custom logic when the resource is deleted.
 // - Annotate: Describe fields and set defaults for a resource.
 // - WireDependencies: Control how outputs and secrets flows through values.
-type HostOverride struct{}
+type HostAlias struct{}
 
 // Each resource has in input struct, defining what arguments it accepts.
-type HostOverrideArgs struct {
+type HostAliasArgs struct {
 	// Fields projected into Pulumi must be public and hava a `pulumi:"..."` tag.
 	// The pulumi tag doesn't need to match the field name, but its generally a
 	// good idea.
@@ -27,24 +27,24 @@ type HostOverrideArgs struct {
 }
 
 // Each resource has a state, describing the fields that exist on the created resource.
-type HostOverrideState struct {
+type HostAliasState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
-	HostOverrideArgs
+	HostAliasArgs
 	// Here we define a required output called result.
 	Result string `pulumi:"result"`
 }
 
 // All resources must implement Create at a minumum.
-func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
-	state := HostOverrideState{HostOverrideArgs: input}
+func (HostAlias) Create(ctx p.Context, name string, input HostAliasArgs, preview bool) (string, HostAliasState, error) {
+	state := HostAliasState{HostAliasArgs: input}
 	if preview {
 		return name, state, nil
 	}
-	state.Result = makeHostOverride(input.Length)
+	state.Result = makeHostAlias(input.Length)
 	return name, state, nil
 }
 
-func makeHostOverride(length int) string {
+func makeHostAlias(length int) string {
 	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 

@@ -3,7 +3,7 @@ PROJECT_NAME := Pulumi opnsense Resource Provider
 PACK             := opnsense
 PACKDIR          := sdk
 PROJECT          := github.com/pulumi/pulumi-opnsense
-NODE_MODULE_NAME := @pulumi/opnsense
+NODE_MODULE_NAME := @oss4u/opnsense
 NUGET_PKG_NAME   := Pulumi.opnsense
 
 PROVIDER        := pulumi-resource-${PACK}
@@ -19,7 +19,7 @@ TESTPARALLELISM := 4
 ensure::
 	cd provider && go mod tidy
 	cd sdk && go mod tidy
-	cd tests && go mod tidy
+#	cd tests && go mod tidy
 
 provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
