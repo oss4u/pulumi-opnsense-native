@@ -29,7 +29,7 @@ env:
   PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
   PYPI_USERNAME: "oss4u"
   PYPI_REPOSITORY_URL: ""
-  PUBLISH_PYPI: false
+  PUBLISH_PYPI: true
 jobs:
   publish_binary:
     name: publish
@@ -39,6 +39,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Unshallow clone for tags
         run: git fetch --prune --unshallow --tags
+      - name: Unshallow clone for tags
+        run: |
+          VERSION=$(git tag -l --contains HEAD | grep -v "sdk/v" | sed s/v//)
+          echo "VERSION=$(echo $VERSION) >> $GITHUB_ENV"
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -114,9 +118,11 @@ jobs:
           ls -l sdk/* || true
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Copy python.tar.gz
+        env:
+          VERSION: ${{ env.VERSION }}
         run: |
           mkdir -p dist/
-          cp sdk/python.tar.gz dist/pulumi-opnsense-0.0.0.tar.gz
+          cp sdk/python.tar.gz dist/pulumi-opnsense-$VERSION.tar.gz
           ls -l dist/* || true
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Publish package to PyPI
