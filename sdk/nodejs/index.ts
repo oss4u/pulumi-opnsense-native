@@ -5,36 +5,18 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
-export { HostOverrideArgs } from "./hostOverride";
-export type HostOverride = import("./hostOverride").HostOverride;
-export const HostOverride: typeof import("./hostOverride").HostOverride = null as any;
-utilities.lazyLoad(exports, ["HostOverride"], () => require("./hostOverride"));
-
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
 export const Provider: typeof import("./provider").Provider = null as any;
 utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
-export { RandomArgs } from "./random";
-export type Random = import("./random").Random;
-export const Random: typeof import("./random").Random = null as any;
-utilities.lazyLoad(exports, ["Random"], () => require("./random"));
 
+// Export sub-modules:
+import * as unbound from "./unbound";
 
-const _module = {
-    version: utilities.getVersion(),
-    construct: (name: string, type: string, urn: string): pulumi.Resource => {
-        switch (type) {
-            case "opnsense:index:HostOverride":
-                return new HostOverride(name, <any>undefined, { urn })
-            case "opnsense:index:Random":
-                return new Random(name, <any>undefined, { urn })
-            default:
-                throw new Error(`unknown resource type ${type}`);
-        }
-    },
+export {
+    unbound,
 };
-pulumi.runtime.registerResourceModule("opnsense", "index", _module)
 pulumi.runtime.registerResourcePackage("opnsense", {
     version: utilities.getVersion(),
     constructProvider: (name: string, type: string, urn: string): pulumi.ProviderResource => {

@@ -1,5 +1,5 @@
 {
-    "name": "@oss4u/opnsense",
+    "name": "@pulumi/opnsense",
     "version": "${VERSION}",
     "scripts": {
         "build": "tsc",
@@ -14,6 +14,7 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "opnsense"
+        "name": "opnsense",
+        "server": "github://api.github.com/oss4u/pulumi-opnsense-native"
     }
 }

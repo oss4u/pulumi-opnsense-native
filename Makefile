@@ -1,10 +1,10 @@
-PROJECT_NAME := Pulumi opnsense Resource Provider
+PROJECT_NAME := Pulumi Opnsense Resource Provider
 
 PACK             := opnsense
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-opnsense
+PROJECT          := github.com/oss4u/pulumi-opnsense-native
 NODE_MODULE_NAME := @oss4u/opnsense
-NUGET_PKG_NAME   := Pulumi.opnsense
+NUGET_PKG_NAME   := Oss4u.opnsense
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
@@ -22,7 +22,10 @@ ensure::
 #	cd tests && go mod tidy
 
 provider::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" ./cmd/$(PROVIDER))
+
+#provider::
+#	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 provider_debug::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))

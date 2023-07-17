@@ -18,6 +18,7 @@ import (
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/unbound"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi-go-provider/middleware/schema"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
@@ -28,6 +29,9 @@ func main() {
 		// We tell the provider what resources it needs to support.
 		// In this case, a single custom resource.
 		infer.Provider(infer.Options{
+			Metadata: schema.Metadata{
+				PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
+			},
 			Resources: []infer.InferredResource{
 				infer.Resource[unbound.HostAlias, unbound.HostAliasArgs, unbound.HostAliasState](),
 				infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),

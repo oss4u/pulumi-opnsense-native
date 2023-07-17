@@ -1,4 +1,4 @@
-module github.com/pulumi/pulumi-opnsense
+module github.com/oss4u/pulumi-opnsense-native
 
 go 1.18
 

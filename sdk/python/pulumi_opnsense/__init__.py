@@ -5,19 +5,25 @@
 from . import _utilities
 import typing
 # Export this package's modules as members:
-from .host_override import *
 from .provider import *
-from .random import *
+
+# Make subpackages available:
+if typing.TYPE_CHECKING:
+    import pulumi_opnsense.unbound as __unbound
+    unbound = __unbound
+else:
+    unbound = _utilities.lazy_import('pulumi_opnsense.unbound')
+
 _utilities.register(
     resource_modules="""
 [
  {
   "pkg": "opnsense",
-  "mod": "index",
-  "fqn": "pulumi_opnsense",
+  "mod": "unbound",
+  "fqn": "pulumi_opnsense.unbound",
   "classes": {
-   "opnsense:index:HostOverride": "HostOverride",
-   "opnsense:index:Random": "Random"
+   "opnsense:unbound:HostAlias": "HostAlias",
+   "opnsense:unbound:HostOverride": "HostOverride"
   }
  }
 ]
