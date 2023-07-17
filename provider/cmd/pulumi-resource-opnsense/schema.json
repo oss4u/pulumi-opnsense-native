@@ -1,0 +1,5 @@
+{
+  "name": "opnsense",
+  "displayName": "OpnSense",
+  "pluginDownloadURL": "github://api.github.com/oss4u/pulumi-opnsense-native"
+}
