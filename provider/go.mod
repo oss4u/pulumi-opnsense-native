@@ -2,7 +2,10 @@ module github.com/oss4u/pulumi-opnsense-native
 
 go 1.18
 
-require github.com/pulumi/pulumi-go-provider v0.8.0
+require (
+	github.com/go-resty/resty/v2 v2.7.0
+	github.com/pulumi/pulumi-go-provider v0.8.0
+)
 
 require (
 	github.com/Microsoft/go-winio v0.5.2 // indirect

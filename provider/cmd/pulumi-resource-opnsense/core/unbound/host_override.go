@@ -2,8 +2,6 @@ package unbound
 
 import (
 	p "github.com/pulumi/pulumi-go-provider"
-	"math/rand"
-	"time"
 )
 
 // Each resource has a controlling struct.
@@ -18,12 +16,15 @@ import (
 // - WireDependencies: Control how outputs and secrets flows through values.
 type HostOverride struct{}
 
-// Each resource has in input struct, defining what arguments it accepts.
 type HostOverrideArgs struct {
-	// Fields projected into Pulumi must be public and hava a `pulumi:"..."` tag.
-	// The pulumi tag doesn't need to match the field name, but its generally a
-	// good idea.
-	Length int `pulumi:"length"`
+	Enabled     bool   `pulumi:"enabled"`
+	Hostname    string `pulumi:"hostname"`
+	Domain      string `pulumi:"domain"`
+	Rr          string `pulumi:"rr"`
+	MxPrio      int    `pulumi:"mx_prio"`
+	Mx          string `pulumi:"mx"`
+	Server      string `pulumi:"server"`
+	Description string `pulumi:"description"`
 }
 
 // Each resource has a state, describing the fields that exist on the created resource.
@@ -40,17 +41,17 @@ func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, p
 	if preview {
 		return name, state, nil
 	}
-	state.Result = createHostOverride(input.Length)
+	state.Result = createHostOverride(input)
 	return name, state, nil
 }
 
-func createHostOverride(length int) string {
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
-	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+func createHostOverride(host HostOverrideArgs) string {
+	if host.Rr == "A" {
 
-	result := make([]rune, length)
-	for i := range result {
-		result[i] = charset[seededRand.Intn(len(charset))]
+	} else if host.Rr == "AAAA" {
+
+	} else if host.Rr == "MX" {
+
 	}
-	return string(result)
+	return string("result")
 }

@@ -79,8 +79,7 @@ jobs:
         run: git fetch --prune --unshallow --tags
       - name: Get current version
         run: |
-          VERSION=$(git tag -l --contains HEAD | grep -v "sdk/v" | sed s/v//)
-          echo "VERSION=$(echo $VERSION) >> $GITHUB_ENV"
+          echo "VERSION=$(git tag -l --contains HEAD | grep -v "sdk/v" | sed s/v//) >> $GITHUB_ENV"
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -126,6 +125,7 @@ jobs:
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Copy python.tar.gz
         run: |
+          env
           mkdir -p dist/
           cp sdk/python.tar.gz dist/pulumi-opnsense-${{ env.VERSION }}.tar.gz
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
