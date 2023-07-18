@@ -52,6 +52,8 @@ jobs:
         with:
           repo: pulumi/pulumi
           tag: v3.75.0
+          binaries-location: pulumi
+          chmod: 0755
       - name: Install pulumictl
         uses: jaxxstorm/action-install-gh-release@v1.10.0
         with:
