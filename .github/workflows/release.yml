@@ -53,6 +53,7 @@ jobs:
           repo: pulumi/pulumi
           platform: linux
           arch: x86
+          tag: v3.75.0
       - name: Install pulumictl
         uses: jaxxstorm/action-install-gh-release@v1.10.0
         with:
