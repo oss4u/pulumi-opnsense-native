@@ -40,11 +40,11 @@ func (HostAlias) Create(ctx p.Context, name string, input HostAliasArgs, preview
 	if preview {
 		return name, state, nil
 	}
-	state.Result = makeHostAlias(input.Length)
+	state.Result = createHostAlias(input.Length)
 	return name, state, nil
 }
 
-func makeHostAlias(length int) string {
+func createHostAlias(length int) string {
 	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 

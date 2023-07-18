@@ -40,11 +40,11 @@ func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, p
 	if preview {
 		return name, state, nil
 	}
-	state.Result = makeHostOverride(input.Length)
+	state.Result = createHostOverride(input.Length)
 	return name, state, nil
 }
 
-func makeHostOverride(length int) string {
+func createHostOverride(length int) string {
 	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
