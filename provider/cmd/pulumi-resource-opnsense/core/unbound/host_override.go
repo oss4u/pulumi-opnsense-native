@@ -1,6 +1,8 @@
 package unbound
 
 import (
+	"github.com/oss4u/go-opnsense/opnsense"
+	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
 	p "github.com/pulumi/pulumi-go-provider"
 )
 
@@ -45,13 +47,37 @@ func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, p
 	return name, state, nil
 }
 
+func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) error {
+	err := deleteHostOverride(ctx, id)
+	return err
+}
+
+func deleteHostOverride(ctx p.Context, id string) error {
+	api := opnsense.GetOpnSenseClient("", "", "")
+	overrides := unbound.Get_HostOverrides(api)
+	err := overrides.DeleteByID(id)
+	return err
+}
+
 func createHostOverride(host HostOverrideArgs) string {
+	api := opnsense.GetOpnSenseClient("", "", "")
+	overrides := unbound.Get_HostOverrides(api)
+	newHost := unbound.OverridesHost{Host: unbound.OverridesHostDetails{
+		Uuid:        "",
+		Enabled:     host.Enabled,
+		Hostname:    host.Hostname,
+		Domain:      host.Domain,
+		Rr:          host.Rr,
+		Description: host.Description,
+	}}
 	if host.Rr == "A" {
-
+		newHost.Host.Server = host.Server
 	} else if host.Rr == "AAAA" {
-
+		newHost.Host.Server = host.Server
 	} else if host.Rr == "MX" {
-
+		newHost.Host.Mx = host.Mx
+		newHost.Host.Mxprio = host.MxPrio
 	}
-	return string("result")
+	created_host, _ := overrides.Create(&newHost)
+	return created_host.Host.GetUUID()
 }

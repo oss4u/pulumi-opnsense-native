@@ -12,11 +12,32 @@ namespace Pulumi.Opnsense.Unbound
     [OpnsenseResourceType("opnsense:unbound:HostOverride")]
     public partial class HostOverride : global::Pulumi.CustomResource
     {
-        [Output("length")]
-        public Output<int> Length { get; private set; } = null!;
+        [Output("description")]
+        public Output<string> Description { get; private set; } = null!;
+
+        [Output("domain")]
+        public Output<string> Domain { get; private set; } = null!;
+
+        [Output("enabled")]
+        public Output<bool> Enabled { get; private set; } = null!;
+
+        [Output("hostname")]
+        public Output<string> Hostname { get; private set; } = null!;
+
+        [Output("mx")]
+        public Output<string> Mx { get; private set; } = null!;
+
+        [Output("mx_prio")]
+        public Output<int> Mx_prio { get; private set; } = null!;
 
         [Output("result")]
         public Output<string> Result { get; private set; } = null!;
+
+        [Output("rr")]
+        public Output<string> Rr { get; private set; } = null!;
+
+        [Output("server")]
+        public Output<string> Server { get; private set; } = null!;
 
 
         /// <summary>
@@ -64,8 +85,29 @@ namespace Pulumi.Opnsense.Unbound
 
     public sealed class HostOverrideArgs : global::Pulumi.ResourceArgs
     {
-        [Input("length", required: true)]
-        public Input<int> Length { get; set; } = null!;
+        [Input("description", required: true)]
+        public Input<string> Description { get; set; } = null!;
+
+        [Input("domain", required: true)]
+        public Input<string> Domain { get; set; } = null!;
+
+        [Input("enabled", required: true)]
+        public Input<bool> Enabled { get; set; } = null!;
+
+        [Input("hostname", required: true)]
+        public Input<string> Hostname { get; set; } = null!;
+
+        [Input("mx", required: true)]
+        public Input<string> Mx { get; set; } = null!;
+
+        [Input("mx_prio", required: true)]
+        public Input<int> Mx_prio { get; set; } = null!;
+
+        [Input("rr", required: true)]
+        public Input<string> Rr { get; set; } = null!;
+
+        [Input("server", required: true)]
+        public Input<string> Server { get; set; } = null!;
 
         public HostOverrideArgs()
         {

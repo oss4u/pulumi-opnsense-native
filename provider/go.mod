@@ -3,7 +3,7 @@ module github.com/oss4u/pulumi-opnsense-native
 go 1.18
 
 require (
-	github.com/go-resty/resty/v2 v2.7.0
+	github.com/oss4u/go-opnsense v0.0.0-unpublished
 	github.com/pulumi/pulumi-go-provider v0.8.0
 )
 
@@ -22,6 +22,7 @@ require (
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect
 	github.com/go-git/go-git/v5 v5.4.2 // indirect
+	github.com/go-resty/resty/v2 v2.7.0 // indirect
 	github.com/gofrs/uuid v4.2.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/glog v1.0.0 // indirect
@@ -77,3 +78,5 @@ require (
 	lukechampine.com/frand v1.4.2 // indirect
 	sourcegraph.com/sourcegraph/appdash v0.0.0-20211028080628-e2786a622600 // indirect
 )
+
+replace github.com/oss4u/go-opnsense v0.0.0-unpublished => ../../go-opnsense

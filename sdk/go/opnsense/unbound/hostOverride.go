@@ -15,8 +15,15 @@ import (
 type HostOverride struct {
 	pulumi.CustomResourceState
 
-	Length pulumi.IntOutput    `pulumi:"length"`
-	Result pulumi.StringOutput `pulumi:"result"`
+	Description pulumi.StringOutput `pulumi:"description"`
+	Domain      pulumi.StringOutput `pulumi:"domain"`
+	Enabled     pulumi.BoolOutput   `pulumi:"enabled"`
+	Hostname    pulumi.StringOutput `pulumi:"hostname"`
+	Mx          pulumi.StringOutput `pulumi:"mx"`
+	Mx_prio     pulumi.IntOutput    `pulumi:"mx_prio"`
+	Result      pulumi.StringOutput `pulumi:"result"`
+	Rr          pulumi.StringOutput `pulumi:"rr"`
+	Server      pulumi.StringOutput `pulumi:"server"`
 }
 
 // NewHostOverride registers a new resource with the given unique name, arguments, and options.
@@ -26,8 +33,29 @@ func NewHostOverride(ctx *pulumi.Context,
 		return nil, errors.New("missing one or more required arguments")
 	}
 
-	if args.Length == nil {
-		return nil, errors.New("invalid value for required argument 'Length'")
+	if args.Description == nil {
+		return nil, errors.New("invalid value for required argument 'Description'")
+	}
+	if args.Domain == nil {
+		return nil, errors.New("invalid value for required argument 'Domain'")
+	}
+	if args.Enabled == nil {
+		return nil, errors.New("invalid value for required argument 'Enabled'")
+	}
+	if args.Hostname == nil {
+		return nil, errors.New("invalid value for required argument 'Hostname'")
+	}
+	if args.Mx == nil {
+		return nil, errors.New("invalid value for required argument 'Mx'")
+	}
+	if args.Mx_prio == nil {
+		return nil, errors.New("invalid value for required argument 'Mx_prio'")
+	}
+	if args.Rr == nil {
+		return nil, errors.New("invalid value for required argument 'Rr'")
+	}
+	if args.Server == nil {
+		return nil, errors.New("invalid value for required argument 'Server'")
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource HostOverride
@@ -62,12 +90,26 @@ func (HostOverrideState) ElementType() reflect.Type {
 }
 
 type hostOverrideArgs struct {
-	Length int `pulumi:"length"`
+	Description string `pulumi:"description"`
+	Domain      string `pulumi:"domain"`
+	Enabled     bool   `pulumi:"enabled"`
+	Hostname    string `pulumi:"hostname"`
+	Mx          string `pulumi:"mx"`
+	Mx_prio     int    `pulumi:"mx_prio"`
+	Rr          string `pulumi:"rr"`
+	Server      string `pulumi:"server"`
 }
 
 // The set of arguments for constructing a HostOverride resource.
 type HostOverrideArgs struct {
-	Length pulumi.IntInput
+	Description pulumi.StringInput
+	Domain      pulumi.StringInput
+	Enabled     pulumi.BoolInput
+	Hostname    pulumi.StringInput
+	Mx          pulumi.StringInput
+	Mx_prio     pulumi.IntInput
+	Rr          pulumi.StringInput
+	Server      pulumi.StringInput
 }
 
 func (HostOverrideArgs) ElementType() reflect.Type {
@@ -107,12 +149,40 @@ func (o HostOverrideOutput) ToHostOverrideOutputWithContext(ctx context.Context)
 	return o
 }
 
-func (o HostOverrideOutput) Length() pulumi.IntOutput {
-	return o.ApplyT(func(v *HostOverride) pulumi.IntOutput { return v.Length }).(pulumi.IntOutput)
+func (o HostOverrideOutput) Description() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Description }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Domain() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Domain }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Enabled() pulumi.BoolOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.BoolOutput { return v.Enabled }).(pulumi.BoolOutput)
+}
+
+func (o HostOverrideOutput) Hostname() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Hostname }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Mx() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Mx }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Mx_prio() pulumi.IntOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.IntOutput { return v.Mx_prio }).(pulumi.IntOutput)
 }
 
 func (o HostOverrideOutput) Result() pulumi.StringOutput {
 	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Result }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Rr() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Rr }).(pulumi.StringOutput)
+}
+
+func (o HostOverrideOutput) Server() pulumi.StringOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Server }).(pulumi.StringOutput)
 }
 
 func init() {

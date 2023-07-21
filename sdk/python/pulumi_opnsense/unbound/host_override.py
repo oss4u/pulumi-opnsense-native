@@ -14,20 +14,97 @@ __all__ = ['HostOverrideArgs', 'HostOverride']
 @pulumi.input_type
 class HostOverrideArgs:
     def __init__(__self__, *,
-                 length: pulumi.Input[int]):
+                 description: pulumi.Input[str],
+                 domain: pulumi.Input[str],
+                 enabled: pulumi.Input[bool],
+                 hostname: pulumi.Input[str],
+                 mx: pulumi.Input[str],
+                 mx_prio: pulumi.Input[int],
+                 rr: pulumi.Input[str],
+                 server: pulumi.Input[str]):
         """
         The set of arguments for constructing a HostOverride resource.
         """
-        pulumi.set(__self__, "length", length)
+        pulumi.set(__self__, "description", description)
+        pulumi.set(__self__, "domain", domain)
+        pulumi.set(__self__, "enabled", enabled)
+        pulumi.set(__self__, "hostname", hostname)
+        pulumi.set(__self__, "mx", mx)
+        pulumi.set(__self__, "mx_prio", mx_prio)
+        pulumi.set(__self__, "rr", rr)
+        pulumi.set(__self__, "server", server)
 
     @property
     @pulumi.getter
-    def length(self) -> pulumi.Input[int]:
-        return pulumi.get(self, "length")
+    def description(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "description")
 
-    @length.setter
-    def length(self, value: pulumi.Input[int]):
-        pulumi.set(self, "length", value)
+    @description.setter
+    def description(self, value: pulumi.Input[str]):
+        pulumi.set(self, "description", value)
+
+    @property
+    @pulumi.getter
+    def domain(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "domain")
+
+    @domain.setter
+    def domain(self, value: pulumi.Input[str]):
+        pulumi.set(self, "domain", value)
+
+    @property
+    @pulumi.getter
+    def enabled(self) -> pulumi.Input[bool]:
+        return pulumi.get(self, "enabled")
+
+    @enabled.setter
+    def enabled(self, value: pulumi.Input[bool]):
+        pulumi.set(self, "enabled", value)
+
+    @property
+    @pulumi.getter
+    def hostname(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "hostname")
+
+    @hostname.setter
+    def hostname(self, value: pulumi.Input[str]):
+        pulumi.set(self, "hostname", value)
+
+    @property
+    @pulumi.getter
+    def mx(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "mx")
+
+    @mx.setter
+    def mx(self, value: pulumi.Input[str]):
+        pulumi.set(self, "mx", value)
+
+    @property
+    @pulumi.getter
+    def mx_prio(self) -> pulumi.Input[int]:
+        return pulumi.get(self, "mx_prio")
+
+    @mx_prio.setter
+    def mx_prio(self, value: pulumi.Input[int]):
+        pulumi.set(self, "mx_prio", value)
+
+    @property
+    @pulumi.getter
+    def rr(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "rr")
+
+    @rr.setter
+    def rr(self, value: pulumi.Input[str]):
+        pulumi.set(self, "rr", value)
+
+    @property
+    @pulumi.getter
+    def server(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "server")
+
+    @server.setter
+    def server(self, value: pulumi.Input[str]):
+        pulumi.set(self, "server", value)
 
 
 class HostOverride(pulumi.CustomResource):
@@ -35,7 +112,14 @@ class HostOverride(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 length: Optional[pulumi.Input[int]] = None,
+                 description: Optional[pulumi.Input[str]] = None,
+                 domain: Optional[pulumi.Input[str]] = None,
+                 enabled: Optional[pulumi.Input[bool]] = None,
+                 hostname: Optional[pulumi.Input[str]] = None,
+                 mx: Optional[pulumi.Input[str]] = None,
+                 mx_prio: Optional[pulumi.Input[int]] = None,
+                 rr: Optional[pulumi.Input[str]] = None,
+                 server: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         Create a HostOverride resource with the given unique name, props, and options.
@@ -65,7 +149,14 @@ class HostOverride(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 length: Optional[pulumi.Input[int]] = None,
+                 description: Optional[pulumi.Input[str]] = None,
+                 domain: Optional[pulumi.Input[str]] = None,
+                 enabled: Optional[pulumi.Input[bool]] = None,
+                 hostname: Optional[pulumi.Input[str]] = None,
+                 mx: Optional[pulumi.Input[str]] = None,
+                 mx_prio: Optional[pulumi.Input[int]] = None,
+                 rr: Optional[pulumi.Input[str]] = None,
+                 server: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -75,9 +166,30 @@ class HostOverride(pulumi.CustomResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = HostOverrideArgs.__new__(HostOverrideArgs)
 
-            if length is None and not opts.urn:
-                raise TypeError("Missing required property 'length'")
-            __props__.__dict__["length"] = length
+            if description is None and not opts.urn:
+                raise TypeError("Missing required property 'description'")
+            __props__.__dict__["description"] = description
+            if domain is None and not opts.urn:
+                raise TypeError("Missing required property 'domain'")
+            __props__.__dict__["domain"] = domain
+            if enabled is None and not opts.urn:
+                raise TypeError("Missing required property 'enabled'")
+            __props__.__dict__["enabled"] = enabled
+            if hostname is None and not opts.urn:
+                raise TypeError("Missing required property 'hostname'")
+            __props__.__dict__["hostname"] = hostname
+            if mx is None and not opts.urn:
+                raise TypeError("Missing required property 'mx'")
+            __props__.__dict__["mx"] = mx
+            if mx_prio is None and not opts.urn:
+                raise TypeError("Missing required property 'mx_prio'")
+            __props__.__dict__["mx_prio"] = mx_prio
+            if rr is None and not opts.urn:
+                raise TypeError("Missing required property 'rr'")
+            __props__.__dict__["rr"] = rr
+            if server is None and not opts.urn:
+                raise TypeError("Missing required property 'server'")
+            __props__.__dict__["server"] = server
             __props__.__dict__["result"] = None
         super(HostOverride, __self__).__init__(
             'opnsense:unbound:HostOverride',
@@ -101,17 +213,59 @@ class HostOverride(pulumi.CustomResource):
 
         __props__ = HostOverrideArgs.__new__(HostOverrideArgs)
 
-        __props__.__dict__["length"] = None
+        __props__.__dict__["description"] = None
+        __props__.__dict__["domain"] = None
+        __props__.__dict__["enabled"] = None
+        __props__.__dict__["hostname"] = None
+        __props__.__dict__["mx"] = None
+        __props__.__dict__["mx_prio"] = None
         __props__.__dict__["result"] = None
+        __props__.__dict__["rr"] = None
+        __props__.__dict__["server"] = None
         return HostOverride(resource_name, opts=opts, __props__=__props__)
 
     @property
     @pulumi.getter
-    def length(self) -> pulumi.Output[int]:
-        return pulumi.get(self, "length")
+    def description(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "description")
+
+    @property
+    @pulumi.getter
+    def domain(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "domain")
+
+    @property
+    @pulumi.getter
+    def enabled(self) -> pulumi.Output[bool]:
+        return pulumi.get(self, "enabled")
+
+    @property
+    @pulumi.getter
+    def hostname(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "hostname")
+
+    @property
+    @pulumi.getter
+    def mx(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "mx")
+
+    @property
+    @pulumi.getter
+    def mx_prio(self) -> pulumi.Output[int]:
+        return pulumi.get(self, "mx_prio")
 
     @property
     @pulumi.getter
     def result(self) -> pulumi.Output[str]:
         return pulumi.get(self, "result")
+
+    @property
+    @pulumi.getter
+    def rr(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "rr")
+
+    @property
+    @pulumi.getter
+    def server(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "server")
 
