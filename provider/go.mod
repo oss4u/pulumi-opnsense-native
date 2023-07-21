@@ -3,7 +3,7 @@ module github.com/oss4u/pulumi-opnsense-native
 go 1.18
 
 require (
-	github.com/oss4u/go-opnsense v0.0.0-unpublished
+	github.com/oss4u/go-opnsense v0.0.0-20230721073225-caa380236abd
 	github.com/pulumi/pulumi-go-provider v0.8.0
 )
 
@@ -79,4 +79,4 @@ require (
 	sourcegraph.com/sourcegraph/appdash v0.0.0-20211028080628-e2786a622600 // indirect
 )
 
-replace github.com/oss4u/go-opnsense v0.0.0-unpublished => ../../go-opnsense
+//replace github.com/oss4u/go-opnsense => ../../go-opnsense
