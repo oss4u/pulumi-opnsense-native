@@ -3,7 +3,7 @@ module github.com/oss4u/pulumi-opnsense-native
 go 1.18
 
 require (
-	github.com/oss4u/go-opnsense v0.0.0-20230721073225-caa380236abd
+	github.com/oss4u/go-opnsense v0.0.1
 	github.com/pulumi/pulumi-go-provider v0.8.0
 )
 

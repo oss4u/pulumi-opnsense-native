@@ -124,6 +124,8 @@ jobs:
           ls -l sdk/* || true
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Copy python.tar.gz
+        env:
+          VERSION: ${{ env.VERSION }}
         run: |
           env
           mkdir -p dist/
