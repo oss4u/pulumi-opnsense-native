@@ -20,9 +20,9 @@ type Config struct {
 var _ = (infer.Annotated)((*Config)(nil))
 
 func (c *Config) Annotate(a infer.Annotator) {
-	a.Describe(&c.Address, "The username. Its important but not secret.")
-	a.Describe(&c.Key, "The password. It is very secret.")
-	a.Describe(&c.Secret, `The (entirely uncryptographic) hash function used to encode the "password".`)
+	a.Describe(&c.Address, "The address of the fw. (without /api)")
+	a.Describe(&c.Key, "The key to access the api of the fw.")
+	a.Describe(&c.Secret, `The secret to access the api of the fw.`)
 }
 
 var _ = (infer.CustomConfigure)((*Config)(nil))

@@ -6,6 +6,7 @@ import (
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
 // Each resource has a controlling struct.
@@ -57,41 +58,48 @@ func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) err
 }
 
 func (HostOverride) Diff(ctx p.Context, id string, old HostOverrideArgs, new HostOverrideArgs) (p.DiffResponse, error) {
-
+	ctx.Log(diag.Warning, "Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
 	if old.Hostname != new.Hostname {
+		ctx.Log(diag.Warning, "Hostname differs")
 		diffs["hostname"] = p.PropertyDiff{
 			Kind: p.UpdateReplace,
 		}
 	}
 	if old.Domain != new.Domain {
+		ctx.Log(diag.Warning, "Domain differs")
 		diffs["domain"] = p.PropertyDiff{
 			Kind: p.UpdateReplace,
 		}
 	}
 	if old.Description != new.Description {
+		ctx.Log(diag.Warning, "Description differs")
 		diffs["description"] = p.PropertyDiff{
 			Kind: p.UpdateReplace,
 		}
 	}
 	if old.Enabled != new.Enabled {
+		ctx.Log(diag.Warning, "Enabled differs")
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.UpdateReplace,
 		}
 	}
 	if old.Rr == "A" {
 		if old.Server != new.Server {
+			ctx.Log(diag.Warning, "Server differs")
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.UpdateReplace,
 			}
 		}
 	} else if old.Rr == "MX" {
 		if old.Mx != new.Mx {
+			ctx.Log(diag.Warning, "Mx differs")
 			diffs["mx"] = p.PropertyDiff{
 				Kind: p.UpdateReplace,
 			}
 		}
 		if old.MxPrio != new.MxPrio {
+			ctx.Log(diag.Warning, "MxPrio differs")
 			diffs["mxprio"] = p.PropertyDiff{
 				Kind: p.UpdateReplace,
 			}
