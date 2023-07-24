@@ -114,7 +114,7 @@ jobs:
         run: | 
           make ${{ matrix.language }}_sdk
           ls -l
-          ls -l sdk/${{ matrix.language }}/bin || true
+          ls -l sdk/${{ matrix.language }}/bin/dist/ || true
       - name: Compress SDK folder
         run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
       - name: Upload artifacts
