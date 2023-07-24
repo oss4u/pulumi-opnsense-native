@@ -8,22 +8,22 @@ import (
 	"reflect"
 
 	"errors"
+	"github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"internal"
 )
 
 type HostOverride struct {
 	pulumi.CustomResourceState
 
-	Description pulumi.StringOutput `pulumi:"description"`
-	Domain      pulumi.StringOutput `pulumi:"domain"`
-	Enabled     pulumi.BoolOutput   `pulumi:"enabled"`
-	Hostname    pulumi.StringOutput `pulumi:"hostname"`
-	Mx          pulumi.StringOutput `pulumi:"mx"`
-	Mx_prio     pulumi.IntOutput    `pulumi:"mx_prio"`
-	Result      pulumi.StringOutput `pulumi:"result"`
-	Rr          pulumi.StringOutput `pulumi:"rr"`
-	Server      pulumi.StringOutput `pulumi:"server"`
+	Description pulumi.StringOutput    `pulumi:"description"`
+	Domain      pulumi.StringOutput    `pulumi:"domain"`
+	Enabled     pulumi.BoolOutput      `pulumi:"enabled"`
+	Hostname    pulumi.StringOutput    `pulumi:"hostname"`
+	Mx          pulumi.StringPtrOutput `pulumi:"mx"`
+	Mx_prio     pulumi.IntPtrOutput    `pulumi:"mx_prio"`
+	Result      pulumi.StringOutput    `pulumi:"result"`
+	Rr          pulumi.StringOutput    `pulumi:"rr"`
+	Server      pulumi.StringPtrOutput `pulumi:"server"`
 }
 
 // NewHostOverride registers a new resource with the given unique name, arguments, and options.
@@ -45,17 +45,8 @@ func NewHostOverride(ctx *pulumi.Context,
 	if args.Hostname == nil {
 		return nil, errors.New("invalid value for required argument 'Hostname'")
 	}
-	if args.Mx == nil {
-		return nil, errors.New("invalid value for required argument 'Mx'")
-	}
-	if args.Mx_prio == nil {
-		return nil, errors.New("invalid value for required argument 'Mx_prio'")
-	}
 	if args.Rr == nil {
 		return nil, errors.New("invalid value for required argument 'Rr'")
-	}
-	if args.Server == nil {
-		return nil, errors.New("invalid value for required argument 'Server'")
 	}
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource HostOverride
@@ -90,14 +81,14 @@ func (HostOverrideState) ElementType() reflect.Type {
 }
 
 type hostOverrideArgs struct {
-	Description string `pulumi:"description"`
-	Domain      string `pulumi:"domain"`
-	Enabled     bool   `pulumi:"enabled"`
-	Hostname    string `pulumi:"hostname"`
-	Mx          string `pulumi:"mx"`
-	Mx_prio     int    `pulumi:"mx_prio"`
-	Rr          string `pulumi:"rr"`
-	Server      string `pulumi:"server"`
+	Description string  `pulumi:"description"`
+	Domain      string  `pulumi:"domain"`
+	Enabled     bool    `pulumi:"enabled"`
+	Hostname    string  `pulumi:"hostname"`
+	Mx          *string `pulumi:"mx"`
+	Mx_prio     *int    `pulumi:"mx_prio"`
+	Rr          string  `pulumi:"rr"`
+	Server      *string `pulumi:"server"`
 }
 
 // The set of arguments for constructing a HostOverride resource.
@@ -106,10 +97,10 @@ type HostOverrideArgs struct {
 	Domain      pulumi.StringInput
 	Enabled     pulumi.BoolInput
 	Hostname    pulumi.StringInput
-	Mx          pulumi.StringInput
-	Mx_prio     pulumi.IntInput
+	Mx          pulumi.StringPtrInput
+	Mx_prio     pulumi.IntPtrInput
 	Rr          pulumi.StringInput
-	Server      pulumi.StringInput
+	Server      pulumi.StringPtrInput
 }
 
 func (HostOverrideArgs) ElementType() reflect.Type {
@@ -133,6 +124,56 @@ func (i *HostOverride) ToHostOverrideOutput() HostOverrideOutput {
 
 func (i *HostOverride) ToHostOverrideOutputWithContext(ctx context.Context) HostOverrideOutput {
 	return pulumi.ToOutputWithContext(ctx, i).(HostOverrideOutput)
+}
+
+// HostOverrideArrayInput is an input type that accepts HostOverrideArray and HostOverrideArrayOutput values.
+// You can construct a concrete instance of `HostOverrideArrayInput` via:
+//
+//	HostOverrideArray{ HostOverrideArgs{...} }
+type HostOverrideArrayInput interface {
+	pulumi.Input
+
+	ToHostOverrideArrayOutput() HostOverrideArrayOutput
+	ToHostOverrideArrayOutputWithContext(context.Context) HostOverrideArrayOutput
+}
+
+type HostOverrideArray []HostOverrideInput
+
+func (HostOverrideArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]*HostOverride)(nil)).Elem()
+}
+
+func (i HostOverrideArray) ToHostOverrideArrayOutput() HostOverrideArrayOutput {
+	return i.ToHostOverrideArrayOutputWithContext(context.Background())
+}
+
+func (i HostOverrideArray) ToHostOverrideArrayOutputWithContext(ctx context.Context) HostOverrideArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(HostOverrideArrayOutput)
+}
+
+// HostOverrideMapInput is an input type that accepts HostOverrideMap and HostOverrideMapOutput values.
+// You can construct a concrete instance of `HostOverrideMapInput` via:
+//
+//	HostOverrideMap{ "key": HostOverrideArgs{...} }
+type HostOverrideMapInput interface {
+	pulumi.Input
+
+	ToHostOverrideMapOutput() HostOverrideMapOutput
+	ToHostOverrideMapOutputWithContext(context.Context) HostOverrideMapOutput
+}
+
+type HostOverrideMap map[string]HostOverrideInput
+
+func (HostOverrideMap) ElementType() reflect.Type {
+	return reflect.TypeOf((*map[string]*HostOverride)(nil)).Elem()
+}
+
+func (i HostOverrideMap) ToHostOverrideMapOutput() HostOverrideMapOutput {
+	return i.ToHostOverrideMapOutputWithContext(context.Background())
+}
+
+func (i HostOverrideMap) ToHostOverrideMapOutputWithContext(ctx context.Context) HostOverrideMapOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(HostOverrideMapOutput)
 }
 
 type HostOverrideOutput struct{ *pulumi.OutputState }
@@ -165,12 +206,12 @@ func (o HostOverrideOutput) Hostname() pulumi.StringOutput {
 	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Hostname }).(pulumi.StringOutput)
 }
 
-func (o HostOverrideOutput) Mx() pulumi.StringOutput {
-	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Mx }).(pulumi.StringOutput)
+func (o HostOverrideOutput) Mx() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringPtrOutput { return v.Mx }).(pulumi.StringPtrOutput)
 }
 
-func (o HostOverrideOutput) Mx_prio() pulumi.IntOutput {
-	return o.ApplyT(func(v *HostOverride) pulumi.IntOutput { return v.Mx_prio }).(pulumi.IntOutput)
+func (o HostOverrideOutput) Mx_prio() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.IntPtrOutput { return v.Mx_prio }).(pulumi.IntPtrOutput)
 }
 
 func (o HostOverrideOutput) Result() pulumi.StringOutput {
@@ -181,11 +222,55 @@ func (o HostOverrideOutput) Rr() pulumi.StringOutput {
 	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Rr }).(pulumi.StringOutput)
 }
 
-func (o HostOverrideOutput) Server() pulumi.StringOutput {
-	return o.ApplyT(func(v *HostOverride) pulumi.StringOutput { return v.Server }).(pulumi.StringOutput)
+func (o HostOverrideOutput) Server() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *HostOverride) pulumi.StringPtrOutput { return v.Server }).(pulumi.StringPtrOutput)
+}
+
+type HostOverrideArrayOutput struct{ *pulumi.OutputState }
+
+func (HostOverrideArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]*HostOverride)(nil)).Elem()
+}
+
+func (o HostOverrideArrayOutput) ToHostOverrideArrayOutput() HostOverrideArrayOutput {
+	return o
+}
+
+func (o HostOverrideArrayOutput) ToHostOverrideArrayOutputWithContext(ctx context.Context) HostOverrideArrayOutput {
+	return o
+}
+
+func (o HostOverrideArrayOutput) Index(i pulumi.IntInput) HostOverrideOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *HostOverride {
+		return vs[0].([]*HostOverride)[vs[1].(int)]
+	}).(HostOverrideOutput)
+}
+
+type HostOverrideMapOutput struct{ *pulumi.OutputState }
+
+func (HostOverrideMapOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*map[string]*HostOverride)(nil)).Elem()
+}
+
+func (o HostOverrideMapOutput) ToHostOverrideMapOutput() HostOverrideMapOutput {
+	return o
+}
+
+func (o HostOverrideMapOutput) ToHostOverrideMapOutputWithContext(ctx context.Context) HostOverrideMapOutput {
+	return o
+}
+
+func (o HostOverrideMapOutput) MapIndex(k pulumi.StringInput) HostOverrideOutput {
+	return pulumi.All(o, k).ApplyT(func(vs []interface{}) *HostOverride {
+		return vs[0].(map[string]*HostOverride)[vs[1].(string)]
+	}).(HostOverrideOutput)
 }
 
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*HostOverrideInput)(nil)).Elem(), &HostOverride{})
+	pulumi.RegisterInputType(reflect.TypeOf((*HostOverrideArrayInput)(nil)).Elem(), HostOverrideArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*HostOverrideMapInput)(nil)).Elem(), HostOverrideMap{})
 	pulumi.RegisterOutputType(HostOverrideOutput{})
+	pulumi.RegisterOutputType(HostOverrideArrayOutput{})
+	pulumi.RegisterOutputType(HostOverrideMapOutput{})
 }

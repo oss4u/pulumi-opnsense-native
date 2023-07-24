@@ -1,6 +1,8 @@
 {
-    "name": "@pulumi/opnsense",
+    "name": "@oss4u/opnsense",
     "version": "${VERSION}",
+    "repository": "https://github.com/oss4u/pulumi-opnsense-native",
+    "license": "Apache-2.0",
     "scripts": {
         "build": "tsc",
         "install": "node scripts/install-pulumi-plugin.js resource opnsense ${VERSION}"

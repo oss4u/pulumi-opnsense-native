@@ -15,26 +15,48 @@
 package main
 
 import (
+	"fmt"
+	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/config"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/unbound"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/middleware/schema"
+	"os"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
 func main() {
-	p.RunProvider("opnsense", Version,
-		// We tell the provider what resources it needs to support.
-		// In this case, a single custom resource.
-		infer.Provider(infer.Options{
-			Metadata: schema.Metadata{
-				PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
+	err := p.RunProvider("opnsense", Version, provider())
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
+		os.Exit(1)
+	}
+}
+
+func provider() p.Provider {
+	return infer.Provider(infer.Options{
+		Metadata: schema.Metadata{
+			DisplayName: "Opnsense",
+			License:     "Apache-2.0",
+			Repository:  "https://github.com/oss4u/pulumi-opnsense-native",
+			Publisher:   "Oss4u",
+			LanguageMap: map[string]any{
+				"nodejs": map[string]any{
+					"packageName": "@oss4u/opnsense",
+				},
+				"go": map[string]any{
+					"generateResourceContainerTypes": true,
+					"importBasePath":                 "github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense",
+				},
 			},
-			Resources: []infer.InferredResource{
-				infer.Resource[unbound.HostAlias, unbound.HostAliasArgs, unbound.HostAliasState](),
-				infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),
-			},
-		}))
+			PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
+		},
+		Resources: []infer.InferredResource{
+			infer.Resource[unbound.HostAlias, unbound.HostAliasArgs, unbound.HostAliasState](),
+			infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),
+		},
+		Config: infer.Config[*config.Config](),
+	})
 }

@@ -18,10 +18,10 @@ class HostOverrideArgs:
                  domain: pulumi.Input[str],
                  enabled: pulumi.Input[bool],
                  hostname: pulumi.Input[str],
-                 mx: pulumi.Input[str],
-                 mx_prio: pulumi.Input[int],
                  rr: pulumi.Input[str],
-                 server: pulumi.Input[str]):
+                 mx: Optional[pulumi.Input[str]] = None,
+                 mx_prio: Optional[pulumi.Input[int]] = None,
+                 server: Optional[pulumi.Input[str]] = None):
         """
         The set of arguments for constructing a HostOverride resource.
         """
@@ -29,10 +29,13 @@ class HostOverrideArgs:
         pulumi.set(__self__, "domain", domain)
         pulumi.set(__self__, "enabled", enabled)
         pulumi.set(__self__, "hostname", hostname)
-        pulumi.set(__self__, "mx", mx)
-        pulumi.set(__self__, "mx_prio", mx_prio)
         pulumi.set(__self__, "rr", rr)
-        pulumi.set(__self__, "server", server)
+        if mx is not None:
+            pulumi.set(__self__, "mx", mx)
+        if mx_prio is not None:
+            pulumi.set(__self__, "mx_prio", mx_prio)
+        if server is not None:
+            pulumi.set(__self__, "server", server)
 
     @property
     @pulumi.getter
@@ -72,24 +75,6 @@ class HostOverrideArgs:
 
     @property
     @pulumi.getter
-    def mx(self) -> pulumi.Input[str]:
-        return pulumi.get(self, "mx")
-
-    @mx.setter
-    def mx(self, value: pulumi.Input[str]):
-        pulumi.set(self, "mx", value)
-
-    @property
-    @pulumi.getter
-    def mx_prio(self) -> pulumi.Input[int]:
-        return pulumi.get(self, "mx_prio")
-
-    @mx_prio.setter
-    def mx_prio(self, value: pulumi.Input[int]):
-        pulumi.set(self, "mx_prio", value)
-
-    @property
-    @pulumi.getter
     def rr(self) -> pulumi.Input[str]:
         return pulumi.get(self, "rr")
 
@@ -99,11 +84,29 @@ class HostOverrideArgs:
 
     @property
     @pulumi.getter
-    def server(self) -> pulumi.Input[str]:
+    def mx(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "mx")
+
+    @mx.setter
+    def mx(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "mx", value)
+
+    @property
+    @pulumi.getter
+    def mx_prio(self) -> Optional[pulumi.Input[int]]:
+        return pulumi.get(self, "mx_prio")
+
+    @mx_prio.setter
+    def mx_prio(self, value: Optional[pulumi.Input[int]]):
+        pulumi.set(self, "mx_prio", value)
+
+    @property
+    @pulumi.getter
+    def server(self) -> Optional[pulumi.Input[str]]:
         return pulumi.get(self, "server")
 
     @server.setter
-    def server(self, value: pulumi.Input[str]):
+    def server(self, value: Optional[pulumi.Input[str]]):
         pulumi.set(self, "server", value)
 
 
@@ -178,17 +181,11 @@ class HostOverride(pulumi.CustomResource):
             if hostname is None and not opts.urn:
                 raise TypeError("Missing required property 'hostname'")
             __props__.__dict__["hostname"] = hostname
-            if mx is None and not opts.urn:
-                raise TypeError("Missing required property 'mx'")
             __props__.__dict__["mx"] = mx
-            if mx_prio is None and not opts.urn:
-                raise TypeError("Missing required property 'mx_prio'")
             __props__.__dict__["mx_prio"] = mx_prio
             if rr is None and not opts.urn:
                 raise TypeError("Missing required property 'rr'")
             __props__.__dict__["rr"] = rr
-            if server is None and not opts.urn:
-                raise TypeError("Missing required property 'server'")
             __props__.__dict__["server"] = server
             __props__.__dict__["result"] = None
         super(HostOverride, __self__).__init__(
@@ -246,12 +243,12 @@ class HostOverride(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def mx(self) -> pulumi.Output[str]:
+    def mx(self) -> pulumi.Output[Optional[str]]:
         return pulumi.get(self, "mx")
 
     @property
     @pulumi.getter
-    def mx_prio(self) -> pulumi.Output[int]:
+    def mx_prio(self) -> pulumi.Output[Optional[int]]:
         return pulumi.get(self, "mx_prio")
 
     @property
@@ -266,6 +263,6 @@ class HostOverride(pulumi.CustomResource):
 
     @property
     @pulumi.getter
-    def server(self) -> pulumi.Output[str]:
+    def server(self) -> pulumi.Output[Optional[str]]:
         return pulumi.get(self, "server")
 

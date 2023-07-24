@@ -13,11 +13,55 @@ __all__ = ['ProviderArgs', 'Provider']
 
 @pulumi.input_type
 class ProviderArgs:
-    def __init__(__self__):
+    def __init__(__self__, *,
+                 fw_api_address: pulumi.Input[str],
+                 fw_api_key: pulumi.Input[str],
+                 fw_api_secret: pulumi.Input[str]):
         """
         The set of arguments for constructing a Provider resource.
+        :param pulumi.Input[str] fw_api_address: The username. Its important but not secret.
+        :param pulumi.Input[str] fw_api_key: The password. It is very secret.
+        :param pulumi.Input[str] fw_api_secret: The (entirely uncryptographic) hash function used to encode the "password".
         """
-        pass
+        pulumi.set(__self__, "fw_api_address", fw_api_address)
+        pulumi.set(__self__, "fw_api_key", fw_api_key)
+        pulumi.set(__self__, "fw_api_secret", fw_api_secret)
+
+    @property
+    @pulumi.getter
+    def fw_api_address(self) -> pulumi.Input[str]:
+        """
+        The username. Its important but not secret.
+        """
+        return pulumi.get(self, "fw_api_address")
+
+    @fw_api_address.setter
+    def fw_api_address(self, value: pulumi.Input[str]):
+        pulumi.set(self, "fw_api_address", value)
+
+    @property
+    @pulumi.getter
+    def fw_api_key(self) -> pulumi.Input[str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "fw_api_key")
+
+    @fw_api_key.setter
+    def fw_api_key(self, value: pulumi.Input[str]):
+        pulumi.set(self, "fw_api_key", value)
+
+    @property
+    @pulumi.getter
+    def fw_api_secret(self) -> pulumi.Input[str]:
+        """
+        The (entirely uncryptographic) hash function used to encode the "password".
+        """
+        return pulumi.get(self, "fw_api_secret")
+
+    @fw_api_secret.setter
+    def fw_api_secret(self, value: pulumi.Input[str]):
+        pulumi.set(self, "fw_api_secret", value)
 
 
 class Provider(pulumi.ProviderResource):
@@ -25,17 +69,23 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 fw_api_address: Optional[pulumi.Input[str]] = None,
+                 fw_api_key: Optional[pulumi.Input[str]] = None,
+                 fw_api_secret: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         Create a Opnsense resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
+        :param pulumi.Input[str] fw_api_address: The username. Its important but not secret.
+        :param pulumi.Input[str] fw_api_key: The password. It is very secret.
+        :param pulumi.Input[str] fw_api_secret: The (entirely uncryptographic) hash function used to encode the "password".
         """
         ...
     @overload
     def __init__(__self__,
                  resource_name: str,
-                 args: Optional[ProviderArgs] = None,
+                 args: ProviderArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
         Create a Opnsense resource with the given unique name, props, and options.
@@ -54,6 +104,9 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
+                 fw_api_address: Optional[pulumi.Input[str]] = None,
+                 fw_api_key: Optional[pulumi.Input[str]] = None,
+                 fw_api_secret: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -63,9 +116,44 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
+            if fw_api_address is None and not opts.urn:
+                raise TypeError("Missing required property 'fw_api_address'")
+            __props__.__dict__["fw_api_address"] = None if fw_api_address is None else pulumi.Output.secret(fw_api_address)
+            if fw_api_key is None and not opts.urn:
+                raise TypeError("Missing required property 'fw_api_key'")
+            __props__.__dict__["fw_api_key"] = None if fw_api_key is None else pulumi.Output.secret(fw_api_key)
+            if fw_api_secret is None and not opts.urn:
+                raise TypeError("Missing required property 'fw_api_secret'")
+            __props__.__dict__["fw_api_secret"] = None if fw_api_secret is None else pulumi.Output.secret(fw_api_secret)
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["fw_api_address", "fw_api_key", "fw_api_secret"])
+        opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'opnsense',
             resource_name,
             __props__,
             opts)
+
+    @property
+    @pulumi.getter
+    def fw_api_address(self) -> pulumi.Output[str]:
+        """
+        The username. Its important but not secret.
+        """
+        return pulumi.get(self, "fw_api_address")
+
+    @property
+    @pulumi.getter
+    def fw_api_key(self) -> pulumi.Output[str]:
+        """
+        The password. It is very secret.
+        """
+        return pulumi.get(self, "fw_api_key")
+
+    @property
+    @pulumi.getter
+    def fw_api_secret(self) -> pulumi.Output[str]:
+        """
+        The (entirely uncryptographic) hash function used to encode the "password".
+        """
+        return pulumi.get(self, "fw_api_secret")
 

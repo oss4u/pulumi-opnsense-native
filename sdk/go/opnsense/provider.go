@@ -7,21 +7,53 @@ import (
 	"context"
 	"reflect"
 
+	"errors"
+	"github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"internal"
 )
 
 type Provider struct {
 	pulumi.ProviderResourceState
+
+	// The username. Its important but not secret.
+	Fw_api_address pulumi.StringOutput `pulumi:"fw_api_address"`
+	// The password. It is very secret.
+	Fw_api_key pulumi.StringOutput `pulumi:"fw_api_key"`
+	// The (entirely uncryptographic) hash function used to encode the "password".
+	Fw_api_secret pulumi.StringOutput `pulumi:"fw_api_secret"`
 }
 
 // NewProvider registers a new resource with the given unique name, arguments, and options.
 func NewProvider(ctx *pulumi.Context,
 	name string, args *ProviderArgs, opts ...pulumi.ResourceOption) (*Provider, error) {
 	if args == nil {
-		args = &ProviderArgs{}
+		return nil, errors.New("missing one or more required arguments")
 	}
 
+	if args.Fw_api_address == nil {
+		return nil, errors.New("invalid value for required argument 'Fw_api_address'")
+	}
+	if args.Fw_api_key == nil {
+		return nil, errors.New("invalid value for required argument 'Fw_api_key'")
+	}
+	if args.Fw_api_secret == nil {
+		return nil, errors.New("invalid value for required argument 'Fw_api_secret'")
+	}
+	if args.Fw_api_address != nil {
+		args.Fw_api_address = pulumi.ToSecret(args.Fw_api_address).(pulumi.StringInput)
+	}
+	if args.Fw_api_key != nil {
+		args.Fw_api_key = pulumi.ToSecret(args.Fw_api_key).(pulumi.StringInput)
+	}
+	if args.Fw_api_secret != nil {
+		args.Fw_api_secret = pulumi.ToSecret(args.Fw_api_secret).(pulumi.StringInput)
+	}
+	secrets := pulumi.AdditionalSecretOutputs([]string{
+		"fw_api_address",
+		"fw_api_key",
+		"fw_api_secret",
+	})
+	opts = append(opts, secrets)
 	opts = internal.PkgResourceDefaultOpts(opts)
 	var resource Provider
 	err := ctx.RegisterResource("pulumi:providers:opnsense", name, args, &resource, opts...)
@@ -32,10 +64,22 @@ func NewProvider(ctx *pulumi.Context,
 }
 
 type providerArgs struct {
+	// The username. Its important but not secret.
+	Fw_api_address string `pulumi:"fw_api_address"`
+	// The password. It is very secret.
+	Fw_api_key string `pulumi:"fw_api_key"`
+	// The (entirely uncryptographic) hash function used to encode the "password".
+	Fw_api_secret string `pulumi:"fw_api_secret"`
 }
 
 // The set of arguments for constructing a Provider resource.
 type ProviderArgs struct {
+	// The username. Its important but not secret.
+	Fw_api_address pulumi.StringInput
+	// The password. It is very secret.
+	Fw_api_key pulumi.StringInput
+	// The (entirely uncryptographic) hash function used to encode the "password".
+	Fw_api_secret pulumi.StringInput
 }
 
 func (ProviderArgs) ElementType() reflect.Type {
@@ -73,6 +117,21 @@ func (o ProviderOutput) ToProviderOutput() ProviderOutput {
 
 func (o ProviderOutput) ToProviderOutputWithContext(ctx context.Context) ProviderOutput {
 	return o
+}
+
+// The username. Its important but not secret.
+func (o ProviderOutput) Fw_api_address() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Fw_api_address }).(pulumi.StringOutput)
+}
+
+// The password. It is very secret.
+func (o ProviderOutput) Fw_api_key() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Fw_api_key }).(pulumi.StringOutput)
+}
+
+// The (entirely uncryptographic) hash function used to encode the "password".
+func (o ProviderOutput) Fw_api_secret() pulumi.StringOutput {
+	return o.ApplyT(func(v *Provider) pulumi.StringOutput { return v.Fw_api_secret }).(pulumi.StringOutput)
 }
 
 func init() {

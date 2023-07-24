@@ -19,6 +19,18 @@ export class Provider extends pulumi.ProviderResource {
         return obj['__pulumiType'] === "pulumi:providers:" + Provider.__pulumiType;
     }
 
+    /**
+     * The username. Its important but not secret.
+     */
+    public readonly fw_api_address!: pulumi.Output<string>;
+    /**
+     * The password. It is very secret.
+     */
+    public readonly fw_api_key!: pulumi.Output<string>;
+    /**
+     * The (entirely uncryptographic) hash function used to encode the "password".
+     */
+    public readonly fw_api_secret!: pulumi.Output<string>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -27,12 +39,26 @@ export class Provider extends pulumi.ProviderResource {
      * @param args The arguments to use to populate this resource's properties.
      * @param opts A bag of options that control this resource's behavior.
      */
-    constructor(name: string, args?: ProviderArgs, opts?: pulumi.ResourceOptions) {
+    constructor(name: string, args: ProviderArgs, opts?: pulumi.ResourceOptions) {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
+            if ((!args || args.fw_api_address === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'fw_api_address'");
+            }
+            if ((!args || args.fw_api_key === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'fw_api_key'");
+            }
+            if ((!args || args.fw_api_secret === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'fw_api_secret'");
+            }
+            resourceInputs["fw_api_address"] = args?.fw_api_address ? pulumi.secret(args.fw_api_address) : undefined;
+            resourceInputs["fw_api_key"] = args?.fw_api_key ? pulumi.secret(args.fw_api_key) : undefined;
+            resourceInputs["fw_api_secret"] = args?.fw_api_secret ? pulumi.secret(args.fw_api_secret) : undefined;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
+        const secretOpts = { additionalSecretOutputs: ["fw_api_address", "fw_api_key", "fw_api_secret"] };
+        opts = pulumi.mergeOptions(opts, secretOpts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
     }
 }
@@ -41,4 +67,16 @@ export class Provider extends pulumi.ProviderResource {
  * The set of arguments for constructing a Provider resource.
  */
 export interface ProviderArgs {
+    /**
+     * The username. Its important but not secret.
+     */
+    fw_api_address: pulumi.Input<string>;
+    /**
+     * The password. It is very secret.
+     */
+    fw_api_key: pulumi.Input<string>;
+    /**
+     * The (entirely uncryptographic) hash function used to encode the "password".
+     */
+    fw_api_secret: pulumi.Input<string>;
 }

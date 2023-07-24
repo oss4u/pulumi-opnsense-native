@@ -9,9 +9,12 @@ from .provider import *
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
+    import pulumi_opnsense.config as __config
+    config = __config
     import pulumi_opnsense.unbound as __unbound
     unbound = __unbound
 else:
+    config = _utilities.lazy_import('pulumi_opnsense.config')
     unbound = _utilities.lazy_import('pulumi_opnsense.unbound')
 
 _utilities.register(

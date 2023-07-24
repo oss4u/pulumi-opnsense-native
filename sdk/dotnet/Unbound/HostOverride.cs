@@ -25,10 +25,10 @@ namespace Pulumi.Opnsense.Unbound
         public Output<string> Hostname { get; private set; } = null!;
 
         [Output("mx")]
-        public Output<string> Mx { get; private set; } = null!;
+        public Output<string?> Mx { get; private set; } = null!;
 
         [Output("mx_prio")]
-        public Output<int> Mx_prio { get; private set; } = null!;
+        public Output<int?> Mx_prio { get; private set; } = null!;
 
         [Output("result")]
         public Output<string> Result { get; private set; } = null!;
@@ -37,7 +37,7 @@ namespace Pulumi.Opnsense.Unbound
         public Output<string> Rr { get; private set; } = null!;
 
         [Output("server")]
-        public Output<string> Server { get; private set; } = null!;
+        public Output<string?> Server { get; private set; } = null!;
 
 
         /// <summary>
@@ -97,17 +97,17 @@ namespace Pulumi.Opnsense.Unbound
         [Input("hostname", required: true)]
         public Input<string> Hostname { get; set; } = null!;
 
-        [Input("mx", required: true)]
-        public Input<string> Mx { get; set; } = null!;
+        [Input("mx")]
+        public Input<string>? Mx { get; set; }
 
-        [Input("mx_prio", required: true)]
-        public Input<int> Mx_prio { get; set; } = null!;
+        [Input("mx_prio")]
+        public Input<int>? Mx_prio { get; set; }
 
         [Input("rr", required: true)]
         public Input<string> Rr { get; set; } = null!;
 
-        [Input("server", required: true)]
-        public Input<string> Server { get; set; } = null!;
+        [Input("server")]
+        public Input<string>? Server { get; set; }
 
         public HostOverrideArgs()
         {

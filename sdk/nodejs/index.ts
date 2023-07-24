@@ -12,9 +12,11 @@ utilities.lazyLoad(exports, ["Provider"], () => require("./provider"));
 
 
 // Export sub-modules:
+import * as config from "./config";
 import * as unbound from "./unbound";
 
 export {
+    config,
     unbound,
 };
 pulumi.runtime.registerResourcePackage("opnsense", {

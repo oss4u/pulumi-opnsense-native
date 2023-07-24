@@ -1,5 +1,189 @@
 {
   "name": "opnsense",
-  "displayName": "OpnSense",
-  "pluginDownloadURL": "github://api.github.com/oss4u/pulumi-opnsense-native"
+  "displayName": "Opnsense",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/oss4u/pulumi-opnsense-native",
+  "pluginDownloadURL": "github://api.github.com/oss4u/pulumi-opnsense-native",
+  "publisher": "Oss4u",
+  "meta": {
+    "moduleFormat": "(.*)"
+  },
+  "language": {
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense"
+    },
+    "nodejs": {
+      "packageName": "@oss4u/opnsense"
+    }
+  },
+  "config": {
+    "variables": {
+      "fw_api_address": {
+        "type": "string",
+        "description": "The username. Its important but not secret.",
+        "secret": true
+      },
+      "fw_api_key": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "fw_api_secret": {
+        "type": "string",
+        "description": "The (entirely uncryptographic) hash function used to encode the \"password\".",
+        "secret": true
+      }
+    },
+    "defaults": [
+      "fw_api_address",
+      "fw_api_key",
+      "fw_api_secret"
+    ]
+  },
+  "provider": {
+    "properties": {
+      "fw_api_address": {
+        "type": "string",
+        "description": "The username. Its important but not secret.",
+        "secret": true
+      },
+      "fw_api_key": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "fw_api_secret": {
+        "type": "string",
+        "description": "The (entirely uncryptographic) hash function used to encode the \"password\".",
+        "secret": true
+      }
+    },
+    "type": "object",
+    "required": [
+      "fw_api_address",
+      "fw_api_key",
+      "fw_api_secret"
+    ],
+    "inputProperties": {
+      "fw_api_address": {
+        "type": "string",
+        "description": "The username. Its important but not secret.",
+        "secret": true
+      },
+      "fw_api_key": {
+        "type": "string",
+        "description": "The password. It is very secret.",
+        "secret": true
+      },
+      "fw_api_secret": {
+        "type": "string",
+        "description": "The (entirely uncryptographic) hash function used to encode the \"password\".",
+        "secret": true
+      }
+    },
+    "requiredInputs": [
+      "fw_api_address",
+      "fw_api_key",
+      "fw_api_secret"
+    ]
+  },
+  "resources": {
+    "opnsense:unbound:HostAlias": {
+      "properties": {
+        "length": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "length",
+        "result"
+      ],
+      "inputProperties": {
+        "length": {
+          "type": "integer"
+        }
+      },
+      "requiredInputs": [
+        "length"
+      ]
+    },
+    "opnsense:unbound:HostOverride": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "mx": {
+          "type": "string"
+        },
+        "mx_prio": {
+          "type": "integer"
+        },
+        "result": {
+          "type": "string"
+        },
+        "rr": {
+          "type": "string"
+        },
+        "server": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "description",
+        "domain",
+        "enabled",
+        "hostname",
+        "result",
+        "rr"
+      ],
+      "inputProperties": {
+        "description": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "mx": {
+          "type": "string"
+        },
+        "mx_prio": {
+          "type": "integer"
+        },
+        "rr": {
+          "type": "string"
+        },
+        "server": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "description",
+        "domain",
+        "enabled",
+        "hostname",
+        "rr"
+      ]
+    }
+  }
 }

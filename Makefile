@@ -10,19 +10,26 @@ PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
 PROVIDER_PATH   := provider
 VERSION_PATH     := ${PROVIDER_PATH}/cmd/main.Version
+SCHEMA_PATH      := ${PROVIDER_PATH}/cmd/${PROVIDER}/schema.json
 
 GOPATH			:= $(shell go env GOPATH)
 
 WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
+gen_schema:
+	pulumi package get-schema ./bin/pulumi-resource-opnsense > $(SCHEMA_PATH) && jq -r 'del(.version)' $(SCHEMA_PATH) > $(SCHEMA_PATH).new && mv $(SCHEMA_PATH).new $(SCHEMA_PATH)
+
 ensure::
 	cd provider && go mod tidy
 	cd sdk && go mod tidy
 #	cd tests && go mod tidy
 
-provider::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" ./cmd/$(PROVIDER))
+provider: build_provider gen_schema
+
+build_provider::
+	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X main.Version=${VERSION}" ./cmd/$(PROVIDER))
+#	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" ./cmd/$(PROVIDER))
 
 #provider::
 #	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
@@ -55,6 +62,7 @@ nodejs_sdk::
 		cp -R scripts/ bin && \
 		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
 		sed -i.bak 's/$${VERSION}/$(VERSION)/g' bin/package.json && \
+#		sed -i.bak "s/\"name\": \"@pulumi/\"name\": \"@oss4u/g" bin/package.json && \
 		rm ./bin/package.json.bak
 
 python_sdk:: PYPI_VERSION := $(shell pulumictl get version --language python)

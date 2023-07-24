@@ -8,8 +8,8 @@ import (
 	"reflect"
 
 	"errors"
+	"github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense/internal"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"internal"
 )
 
 type HostAlias struct {
@@ -93,6 +93,56 @@ func (i *HostAlias) ToHostAliasOutputWithContext(ctx context.Context) HostAliasO
 	return pulumi.ToOutputWithContext(ctx, i).(HostAliasOutput)
 }
 
+// HostAliasArrayInput is an input type that accepts HostAliasArray and HostAliasArrayOutput values.
+// You can construct a concrete instance of `HostAliasArrayInput` via:
+//
+//	HostAliasArray{ HostAliasArgs{...} }
+type HostAliasArrayInput interface {
+	pulumi.Input
+
+	ToHostAliasArrayOutput() HostAliasArrayOutput
+	ToHostAliasArrayOutputWithContext(context.Context) HostAliasArrayOutput
+}
+
+type HostAliasArray []HostAliasInput
+
+func (HostAliasArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]*HostAlias)(nil)).Elem()
+}
+
+func (i HostAliasArray) ToHostAliasArrayOutput() HostAliasArrayOutput {
+	return i.ToHostAliasArrayOutputWithContext(context.Background())
+}
+
+func (i HostAliasArray) ToHostAliasArrayOutputWithContext(ctx context.Context) HostAliasArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(HostAliasArrayOutput)
+}
+
+// HostAliasMapInput is an input type that accepts HostAliasMap and HostAliasMapOutput values.
+// You can construct a concrete instance of `HostAliasMapInput` via:
+//
+//	HostAliasMap{ "key": HostAliasArgs{...} }
+type HostAliasMapInput interface {
+	pulumi.Input
+
+	ToHostAliasMapOutput() HostAliasMapOutput
+	ToHostAliasMapOutputWithContext(context.Context) HostAliasMapOutput
+}
+
+type HostAliasMap map[string]HostAliasInput
+
+func (HostAliasMap) ElementType() reflect.Type {
+	return reflect.TypeOf((*map[string]*HostAlias)(nil)).Elem()
+}
+
+func (i HostAliasMap) ToHostAliasMapOutput() HostAliasMapOutput {
+	return i.ToHostAliasMapOutputWithContext(context.Background())
+}
+
+func (i HostAliasMap) ToHostAliasMapOutputWithContext(ctx context.Context) HostAliasMapOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(HostAliasMapOutput)
+}
+
 type HostAliasOutput struct{ *pulumi.OutputState }
 
 func (HostAliasOutput) ElementType() reflect.Type {
@@ -115,7 +165,51 @@ func (o HostAliasOutput) Result() pulumi.StringOutput {
 	return o.ApplyT(func(v *HostAlias) pulumi.StringOutput { return v.Result }).(pulumi.StringOutput)
 }
 
+type HostAliasArrayOutput struct{ *pulumi.OutputState }
+
+func (HostAliasArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]*HostAlias)(nil)).Elem()
+}
+
+func (o HostAliasArrayOutput) ToHostAliasArrayOutput() HostAliasArrayOutput {
+	return o
+}
+
+func (o HostAliasArrayOutput) ToHostAliasArrayOutputWithContext(ctx context.Context) HostAliasArrayOutput {
+	return o
+}
+
+func (o HostAliasArrayOutput) Index(i pulumi.IntInput) HostAliasOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) *HostAlias {
+		return vs[0].([]*HostAlias)[vs[1].(int)]
+	}).(HostAliasOutput)
+}
+
+type HostAliasMapOutput struct{ *pulumi.OutputState }
+
+func (HostAliasMapOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*map[string]*HostAlias)(nil)).Elem()
+}
+
+func (o HostAliasMapOutput) ToHostAliasMapOutput() HostAliasMapOutput {
+	return o
+}
+
+func (o HostAliasMapOutput) ToHostAliasMapOutputWithContext(ctx context.Context) HostAliasMapOutput {
+	return o
+}
+
+func (o HostAliasMapOutput) MapIndex(k pulumi.StringInput) HostAliasOutput {
+	return pulumi.All(o, k).ApplyT(func(vs []interface{}) *HostAlias {
+		return vs[0].(map[string]*HostAlias)[vs[1].(string)]
+	}).(HostAliasOutput)
+}
+
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*HostAliasInput)(nil)).Elem(), &HostAlias{})
+	pulumi.RegisterInputType(reflect.TypeOf((*HostAliasArrayInput)(nil)).Elem(), HostAliasArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*HostAliasMapInput)(nil)).Elem(), HostAliasMap{})
 	pulumi.RegisterOutputType(HostAliasOutput{})
+	pulumi.RegisterOutputType(HostAliasArrayOutput{})
+	pulumi.RegisterOutputType(HostAliasMapOutput{})
 }

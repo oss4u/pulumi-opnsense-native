@@ -13,13 +13,32 @@ namespace Pulumi.Opnsense
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
+        /// The username. Its important but not secret.
+        /// </summary>
+        [Output("fw_api_address")]
+        public Output<string> Fw_api_address { get; private set; } = null!;
+
+        /// <summary>
+        /// The password. It is very secret.
+        /// </summary>
+        [Output("fw_api_key")]
+        public Output<string> Fw_api_key { get; private set; } = null!;
+
+        /// <summary>
+        /// The (entirely uncryptographic) hash function used to encode the "password".
+        /// </summary>
+        [Output("fw_api_secret")]
+        public Output<string> Fw_api_secret { get; private set; } = null!;
+
+
+        /// <summary>
         /// Create a Provider resource with the given unique name, arguments, and options.
         /// </summary>
         ///
         /// <param name="name">The unique name of the resource</param>
         /// <param name="args">The arguments used to populate this resource's properties</param>
         /// <param name="options">A bag of options that control this resource's behavior</param>
-        public Provider(string name, ProviderArgs? args = null, CustomResourceOptions? options = null)
+        public Provider(string name, ProviderArgs args, CustomResourceOptions? options = null)
             : base("opnsense", name, args ?? new ProviderArgs(), MakeResourceOptions(options, ""))
         {
         }
@@ -30,6 +49,12 @@ namespace Pulumi.Opnsense
             {
                 Version = Utilities.Version,
                 PluginDownloadURL = "github://api.github.com/oss4u/pulumi-opnsense-native",
+                AdditionalSecretOutputs =
+                {
+                    "fw_api_address",
+                    "fw_api_key",
+                    "fw_api_secret",
+                },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
             // Override the ID if one was specified for consistency with other language SDKs.
@@ -40,6 +65,54 @@ namespace Pulumi.Opnsense
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
+        [Input("fw_api_address", required: true)]
+        private Input<string>? _fw_api_address;
+
+        /// <summary>
+        /// The username. Its important but not secret.
+        /// </summary>
+        public Input<string>? Fw_api_address
+        {
+            get => _fw_api_address;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _fw_api_address = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
+        }
+
+        [Input("fw_api_key", required: true)]
+        private Input<string>? _fw_api_key;
+
+        /// <summary>
+        /// The password. It is very secret.
+        /// </summary>
+        public Input<string>? Fw_api_key
+        {
+            get => _fw_api_key;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _fw_api_key = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
+        }
+
+        [Input("fw_api_secret", required: true)]
+        private Input<string>? _fw_api_secret;
+
+        /// <summary>
+        /// The (entirely uncryptographic) hash function used to encode the "password".
+        /// </summary>
+        public Input<string>? Fw_api_secret
+        {
+            get => _fw_api_secret;
+            set
+            {
+                var emptySecret = Output.CreateSecret(0);
+                _fw_api_secret = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+            }
+        }
+
         public ProviderArgs()
         {
         }

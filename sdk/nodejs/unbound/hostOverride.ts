@@ -35,11 +35,11 @@ export class HostOverride extends pulumi.CustomResource {
     public readonly domain!: pulumi.Output<string>;
     public readonly enabled!: pulumi.Output<boolean>;
     public readonly hostname!: pulumi.Output<string>;
-    public readonly mx!: pulumi.Output<string>;
-    public readonly mx_prio!: pulumi.Output<number>;
+    public readonly mx!: pulumi.Output<string | undefined>;
+    public readonly mx_prio!: pulumi.Output<number | undefined>;
     public /*out*/ readonly result!: pulumi.Output<string>;
     public readonly rr!: pulumi.Output<string>;
-    public readonly server!: pulumi.Output<string>;
+    public readonly server!: pulumi.Output<string | undefined>;
 
     /**
      * Create a HostOverride resource with the given unique name, arguments, and options.
@@ -64,17 +64,8 @@ export class HostOverride extends pulumi.CustomResource {
             if ((!args || args.hostname === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'hostname'");
             }
-            if ((!args || args.mx === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'mx'");
-            }
-            if ((!args || args.mx_prio === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'mx_prio'");
-            }
             if ((!args || args.rr === undefined) && !opts.urn) {
                 throw new Error("Missing required property 'rr'");
-            }
-            if ((!args || args.server === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'server'");
             }
             resourceInputs["description"] = args ? args.description : undefined;
             resourceInputs["domain"] = args ? args.domain : undefined;
@@ -109,8 +100,8 @@ export interface HostOverrideArgs {
     domain: pulumi.Input<string>;
     enabled: pulumi.Input<boolean>;
     hostname: pulumi.Input<string>;
-    mx: pulumi.Input<string>;
-    mx_prio: pulumi.Input<number>;
+    mx?: pulumi.Input<string>;
+    mx_prio?: pulumi.Input<number>;
     rr: pulumi.Input<string>;
-    server: pulumi.Input<string>;
+    server?: pulumi.Input<string>;
 }

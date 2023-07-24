@@ -3,7 +3,9 @@ package unbound
 import (
 	"github.com/oss4u/go-opnsense/opnsense"
 	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
+	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/config"
 	p "github.com/pulumi/pulumi-go-provider"
+	"github.com/pulumi/pulumi-go-provider/infer"
 )
 
 // Each resource has a controlling struct.
@@ -23,9 +25,9 @@ type HostOverrideArgs struct {
 	Hostname    string `pulumi:"hostname"`
 	Domain      string `pulumi:"domain"`
 	Rr          string `pulumi:"rr"`
-	MxPrio      int    `pulumi:"mx_prio"`
-	Mx          string `pulumi:"mx"`
-	Server      string `pulumi:"server"`
+	MxPrio      int    `pulumi:"mx_prio,optional"`
+	Mx          string `pulumi:"mx,optional"`
+	Server      string `pulumi:"server,optional"`
 	Description string `pulumi:"description"`
 }
 
@@ -39,28 +41,28 @@ type HostOverrideState struct {
 
 // All resources must implement Create at a minumum.
 func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
+	config := infer.GetConfig[config.Config](ctx)
 	state := HostOverrideState{HostOverrideArgs: input}
 	if preview {
 		return name, state, nil
 	}
-	state.Result = createHostOverride(input)
+	state.Result = createHostOverride(input, config.Api)
 	return name, state, nil
 }
 
 func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) error {
-	err := deleteHostOverride(ctx, id)
+	config := infer.GetConfig[config.Config](ctx)
+	err := deleteHostOverride(ctx, id, config.Api)
 	return err
 }
 
-func deleteHostOverride(ctx p.Context, id string) error {
-	api := opnsense.GetOpnSenseClient("", "", "")
+func deleteHostOverride(ctx p.Context, id string, api *opnsense.OpnSenseApi) error {
 	overrides := unbound.Get_HostOverrides(api)
 	err := overrides.DeleteByID(id)
 	return err
 }
 
-func createHostOverride(host HostOverrideArgs) string {
-	api := opnsense.GetOpnSenseClient("", "", "")
+func createHostOverride(host HostOverrideArgs, api *opnsense.OpnSenseApi) string {
 	overrides := unbound.Get_HostOverrides(api)
 	newHost := unbound.OverridesHost{Host: unbound.OverridesHostDetails{
 		Uuid:        "",
