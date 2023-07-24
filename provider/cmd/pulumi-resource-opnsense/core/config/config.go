@@ -9,9 +9,9 @@ import (
 )
 
 type Config struct {
-	Address           string `pulumi:"fw_api_address" provider:"secret"`
-	Key               string `pulumi:"fw_api_key" provider:"secret"`
-	Secret            string `pulumi:"fw_api_secret" provider:"secret"`
+	Address           string `pulumi:"address" provider:"secret"`
+	Key               string `pulumi:"key" provider:"secret"`
+	Secret            string `pulumi:"secret" provider:"secret"`
 	Version           string `pulumi:"version"`
 	PluginDownloadURL string `pulumi:"pluginDownloadURL"`
 	Api               *opnsense.OpnSenseApi
