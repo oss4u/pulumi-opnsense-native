@@ -9,6 +9,9 @@
     "moduleFormat": "(.*)"
   },
   "language": {
+    "csharp": {
+      "rootNamespace": "Oss4u"
+    },
     "go": {
       "generateResourceContainerTypes": true,
       "importBasePath": "github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense"

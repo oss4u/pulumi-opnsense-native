@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Pulumi.Serialization;
+using Pulumi;
 
-namespace Pulumi.Opnsense.Unbound
+namespace Oss4u.Opnsense.Unbound
 {
     [OpnsenseResourceType("opnsense:unbound:HostOverride")]
     public partial class HostOverride : global::Pulumi.CustomResource

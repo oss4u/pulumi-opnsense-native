@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Pulumi.Opnsense
+namespace Oss4u.Opnsense
 {
     public static class Config
     {

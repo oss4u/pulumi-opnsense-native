@@ -50,6 +50,9 @@ func provider() p.Provider {
 					"generateResourceContainerTypes": true,
 					"importBasePath":                 "github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense",
 				},
+				"csharp": map[string]any{
+					"rootNamespace": "Oss4u",
+				},
 			},
 			PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
 		},
