@@ -16,7 +16,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/config"
+	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/unbound"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
