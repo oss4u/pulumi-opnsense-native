@@ -9,11 +9,12 @@ import (
 )
 
 type Config struct {
-	Address string `pulumi:"fw_api_address" provider:"secret"`
-	Key     string `pulumi:"fw_api_key" provider:"secret"`
-	Secret  string `pulumi:"fw_api_secret" provider:"secret"`
-
-	Api *opnsense.OpnSenseApi
+	Address           string `pulumi:"fw_api_address" provider:"secret"`
+	Key               string `pulumi:"fw_api_key" provider:"secret"`
+	Secret            string `pulumi:"fw_api_secret" provider:"secret"`
+	Version           string `pulumi:"version"`
+	PluginDownloadURL string `pulumi:"pluginDownloadURL"`
+	Api               *opnsense.OpnSenseApi
 }
 
 var _ = (infer.Annotated)((*Config)(nil))
