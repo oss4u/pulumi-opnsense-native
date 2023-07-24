@@ -131,14 +131,14 @@ func createHostOverride(host HostOverrideArgs, api *opnsense.OpnSenseApi) string
 		Rr:          host.Rr,
 		Description: host.Description,
 	}}
-	if host.Rr == "A" {
-		newHost.Host.Server = host.Server
-	} else if host.Rr == "AAAA" {
-		newHost.Host.Server = host.Server
-	} else if host.Rr == "MX" {
-		newHost.Host.Mx = host.Mx
-		newHost.Host.Mxprio = host.MxPrio
-	}
+	//if host.Rr == "A" {
+	newHost.Host.Server = host.Server
+	//} else if host.Rr == "AAAA" {
+	//	newHost.Host.Server = host.Server
+	//} else if host.Rr == "MX" {
+	newHost.Host.Mx = host.Mx
+	newHost.Host.Mxprio = host.MxPrio
+	//}
 	created_host, _ := overrides.Create(&newHost)
 	return created_host.Host.GetUUID()
 }
