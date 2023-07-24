@@ -56,6 +56,57 @@ func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) err
 	return err
 }
 
+func (HostOverride) Diff(ctx p.Context, id string, old HostOverrideArgs, new HostOverrideArgs) (p.DiffResponse, error) {
+
+	diffs := map[string]p.PropertyDiff{}
+	if old.Hostname != new.Hostname {
+		diffs["hostname"] = p.PropertyDiff{
+			Kind: p.UpdateReplace,
+		}
+	}
+	if old.Domain != new.Domain {
+		diffs["domain"] = p.PropertyDiff{
+			Kind: p.UpdateReplace,
+		}
+	}
+	if old.Description != new.Description {
+		diffs["description"] = p.PropertyDiff{
+			Kind: p.UpdateReplace,
+		}
+	}
+	if old.Enabled != new.Enabled {
+		diffs["enabled"] = p.PropertyDiff{
+			Kind: p.UpdateReplace,
+		}
+	}
+	if old.Rr == "A" {
+		if old.Server != new.Server {
+			diffs["server"] = p.PropertyDiff{
+				Kind: p.UpdateReplace,
+			}
+		}
+	} else if old.Rr == "MX" {
+		if old.Mx != new.Mx {
+			diffs["mx"] = p.PropertyDiff{
+				Kind: p.UpdateReplace,
+			}
+		}
+		if old.MxPrio != new.MxPrio {
+			diffs["mxprio"] = p.PropertyDiff{
+				Kind: p.UpdateReplace,
+			}
+		}
+
+	}
+	diff := p.DiffResponse{
+		DeleteBeforeReplace: false,
+		HasChanges:          len(diffs) > 0,
+		DetailedDiff:        diffs,
+	}
+	diff.DeleteBeforeReplace = true
+	return diff, nil
+}
+
 func deleteHostOverride(ctx p.Context, id string, api *opnsense.OpnSenseApi) error {
 	overrides := unbound.Get_HostOverrides(api)
 	err := overrides.DeleteByID(id)
