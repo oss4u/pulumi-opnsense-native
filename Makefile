@@ -62,7 +62,6 @@ nodejs_sdk::
 		cp -R scripts/ bin && \
 		cp ../../README.md ../../LICENSE package.json yarn.lock bin/ && \
 		sed -i.bak 's/$${VERSION}/$(VERSION)/g' bin/package.json && \
-#		sed -i.bak "s/\"name\": \"@pulumi/\"name\": \"@oss4u/g" bin/package.json && \
 		rm ./bin/package.json.bak
 
 python_sdk:: PYPI_VERSION := $(shell pulumictl get version --language python)
