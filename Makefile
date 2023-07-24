@@ -25,7 +25,7 @@ ensure::
 	cd sdk && go mod tidy
 #	cd tests && go mod tidy
 
-provider: build_provider gen_schema
+provider: build_provider # gen_schema
 
 build_provider::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X main.Version=${VERSION}" ./cmd/$(PROVIDER))
