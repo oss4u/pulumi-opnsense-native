@@ -1,11 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"github.com/oss4u/go-opnsense/opnsense"
-	provider2 "github.com/pulumi/pulumi-go-provider"
+	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
-	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
 type Config struct {
@@ -27,9 +25,7 @@ func (c *Config) Annotate(a infer.Annotator) {
 
 var _ = (infer.CustomConfigure)((*Config)(nil))
 
-func (c *Config) Configure(ctx provider2.Context) error {
-	msg := fmt.Sprintf("opnsense provider setup with address: %q, a key (its %q) and a secret (its %q)", c.Address, c.Key, c.Secret)
+func (c *Config) Configure(ctx provider.Context) error {
 	c.Api = opnsense.GetOpnSenseClient(c.Address, c.Key, c.Secret)
-	ctx.Log(diag.Info, msg)
 	return nil
 }
