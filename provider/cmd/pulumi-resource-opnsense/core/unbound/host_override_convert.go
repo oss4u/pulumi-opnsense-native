@@ -1,12 +1,11 @@
-package convert
+package unbound
 
 import (
 	goopnsense "github.com/oss4u/go-opnsense/opnsense/core/unbound"
-	plugin "github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/unbound"
 )
 
-func OverridesHostToHostOverrideArgs(host *goopnsense.OverridesHost) *plugin.HostOverrideArgs {
-	args := plugin.HostOverrideArgs{
+func OverridesHostToHostOverrideArgs(host *goopnsense.OverridesHost) *HostOverrideArgs {
+	args := HostOverrideArgs{
 		Enabled:     host.Host.Enabled,
 		Hostname:    host.Host.Hostname,
 		Domain:      host.Host.Domain,
@@ -19,7 +18,7 @@ func OverridesHostToHostOverrideArgs(host *goopnsense.OverridesHost) *plugin.Hos
 	return &args
 }
 
-func HostOverrideArgsToOverridesHost(args *plugin.HostOverrideArgs) *goopnsense.OverridesHost {
+func HostOverrideArgsToOverridesHost(args *HostOverrideArgs) *goopnsense.OverridesHost {
 	host := goopnsense.OverridesHostDetails{
 		Enabled:     args.Enabled,
 		Hostname:    args.Hostname,

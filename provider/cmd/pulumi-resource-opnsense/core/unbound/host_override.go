@@ -4,7 +4,6 @@ import (
 	"github.com/oss4u/go-opnsense/opnsense"
 	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
-	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/convert"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
@@ -66,7 +65,7 @@ func (HostOverride) Update(ctx p.Context, id string, olds HostOverrideArgs, news
 	}
 	cfg := infer.GetConfig[config.Config](ctx)
 	overrides := unbound.Get_HostOverrides(cfg.Api)
-	host := convert.HostOverrideArgsToOverridesHost(&news)
+	host := HostOverrideArgsToOverridesHost(&news)
 	host.Host.Uuid = id
 	_, err := overrides.Update(host)
 	return news, err
@@ -138,7 +137,7 @@ func deleteHostOverride(id string, api *opnsense.OpnSenseApi) error {
 
 func createHostOverride(args *HostOverrideArgs, api *opnsense.OpnSenseApi) (string, error) {
 	overrides := unbound.Get_HostOverrides(api)
-	newHost := convert.HostOverrideArgsToOverridesHost(args)
+	newHost := HostOverrideArgsToOverridesHost(args)
 	createdHost, err := overrides.Create(newHost)
 	if err != nil {
 		return "", err
