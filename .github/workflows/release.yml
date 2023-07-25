@@ -71,7 +71,8 @@ jobs:
           - 1.20.x
   publish_sdk:
     name: Publish SDKs
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: publish_binary
     steps:
       - name: Checkout Repo

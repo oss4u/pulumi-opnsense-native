@@ -1,6 +1,7 @@
 package unbound
 
 import (
+	"fmt"
 	"github.com/oss4u/go-opnsense/opnsense"
 	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
@@ -42,6 +43,7 @@ type HostOverrideState struct {
 
 // All resources must implement Create at a minumum.
 func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
+	fmt.Printf("Running CREATE")
 	cfg := infer.GetConfig[config.Config](ctx)
 	state := HostOverrideState{HostOverrideArgs: input}
 	if preview {
@@ -53,6 +55,7 @@ func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, p
 }
 
 func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) error {
+	fmt.Printf("Running DELETE")
 	cfg := infer.GetConfig[config.Config](ctx)
 	err := deleteHostOverride(id, cfg.Api)
 	return err
@@ -60,6 +63,7 @@ func (HostOverride) Delete(ctx p.Context, id string, input HostOverrideArgs) err
 
 func (HostOverride) Update(ctx p.Context, id string, olds HostOverrideArgs, news HostOverrideArgs, preview bool) (HostOverrideArgs, error) {
 	ctx.Log(diag.Info, "Running UPDATE")
+	fmt.Printf("Running UPDATE")
 	if preview {
 		return news, nil
 	}
@@ -73,6 +77,7 @@ func (HostOverride) Update(ctx p.Context, id string, olds HostOverrideArgs, news
 
 func (HostOverride) Diff(ctx p.Context, id string, old HostOverrideArgs, new HostOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running DIFF")
+	fmt.Printf("Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
 	if old.Hostname != new.Hostname {
 		ctx.Log(diag.Info, "Hostname differs")

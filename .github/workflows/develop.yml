@@ -10,7 +10,8 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: check conventional commit compliance
     strategy:
       fail-fast: true

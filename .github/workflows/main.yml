@@ -10,7 +10,8 @@ env:
 
 jobs:
   version:
-    runs-on: ubuntu-latest
+#    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: version
     steps:
       - uses: actions/checkout@v3
