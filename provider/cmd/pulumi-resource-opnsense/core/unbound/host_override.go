@@ -130,7 +130,6 @@ func (HostOverride) Diff(ctx p.Context, id string, old HostOverrideArgs, new Hos
 		HasChanges:          len(diffs) > 0,
 		DetailedDiff:        diffs,
 	}
-	diff.DeleteBeforeReplace = true
 	return diff, nil
 }
 
