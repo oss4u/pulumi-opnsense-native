@@ -21,6 +21,7 @@ import (
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi-go-provider/middleware/schema"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/tokens"
 	"os"
 )
 
@@ -61,5 +62,8 @@ func provider() p.Provider {
 			infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),
 		},
 		Config: infer.Config[*config.Config](),
+		ModuleMap: map[tokens.ModuleName]tokens.ModuleName{
+			"pulumi-resource-opnsense": "default",
+		},
 	})
 }
