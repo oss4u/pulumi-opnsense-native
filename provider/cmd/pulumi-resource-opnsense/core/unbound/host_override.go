@@ -23,14 +23,14 @@ import (
 type HostOverride struct{}
 
 type HostOverrideArgs struct {
-	Enabled     bool   `pulumi:"enabled"`
-	Hostname    string `pulumi:"hostname"`
-	Domain      string `pulumi:"domain"`
-	Rr          string `pulumi:"rr"`
-	MxPrio      int    `pulumi:"mx_prio,optional"`
-	Mx          string `pulumi:"mx,optional"`
-	Server      string `pulumi:"server,optional"`
-	Description string `pulumi:"description"`
+	Enabled     *bool   `pulumi:"enabled"`
+	Hostname    *string `pulumi:"hostname"`
+	Domain      *string `pulumi:"domain"`
+	Rr          *string `pulumi:"rr"`
+	MxPrio      *int    `pulumi:"mx_prio,optional"`
+	Mx          *string `pulumi:"mx,optional"`
+	Server      *string `pulumi:"server,optional"`
+	Description *string `pulumi:"description"`
 }
 
 // Each resource has a state, describing the fields that exist on the created resource.
@@ -103,14 +103,14 @@ func (HostOverride) Diff(ctx p.Context, id string, old HostOverrideArgs, new Hos
 			Kind: p.UpdateReplace,
 		}
 	}
-	if old.Rr == "A" {
+	if *old.Rr == "A" {
 		if old.Server != new.Server {
 			ctx.Log(diag.Info, "Server differs")
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.UpdateReplace,
 			}
 		}
-	} else if old.Rr == "MX" {
+	} else if *old.Rr == "MX" {
 		if old.Mx != new.Mx {
 			ctx.Log(diag.Info, "Mx differs")
 			diffs["mx"] = p.PropertyDiff{
