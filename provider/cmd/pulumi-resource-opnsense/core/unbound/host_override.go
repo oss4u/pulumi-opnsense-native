@@ -89,7 +89,7 @@ func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, st
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
 	newArgs := OverridesHostToHostOverrideArgs(host)
-	return id, *newArgs, HostOverrideState{
+	return id, inputs, HostOverrideState{
 		HostOverrideArgs: *newArgs,
 		Id:               id,
 	}, err
