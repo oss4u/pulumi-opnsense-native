@@ -41,3 +41,7 @@ func (c *Config) Diff(ctx provider.Context, id string, olds any, news Config) (p
 		DeleteBeforeReplace: false,
 	}, nil
 }
+
+func (c Config) Update(ctx provider.Context, id string, olds any, news any, preview bool) (any, error) {
+	return news, nil
+}
