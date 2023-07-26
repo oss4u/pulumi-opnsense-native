@@ -101,6 +101,11 @@ func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new 
 	host, err := overrides.Read(id)
 	if err != nil {
 		host = &unbound.OverridesHost{Host: unbound.OverridesHostDetails{}}
+		return p.DiffResponse{
+			DeleteBeforeReplace: true,
+			HasChanges:          true,
+			DetailedDiff:        nil,
+		}, err
 	}
 	diffs := map[string]p.PropertyDiff{}
 	if host.Host.Hostname != *new.Hostname {
