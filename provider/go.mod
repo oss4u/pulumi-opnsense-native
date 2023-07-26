@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/oss4u/go-opnsense v0.0.2-0.20230725070458-bbf6fc318193
-	github.com/pulumi/pulumi-go-provider v0.10.1-0.20230713170753-6034a2cd29e6
+	github.com/pulumi/pulumi-go-provider v0.10.1
 	github.com/pulumi/pulumi/sdk/v3 v3.72.0
 )
 
