@@ -2,7 +2,6 @@ package unbound
 
 import (
 	"fmt"
-	"github.com/oss4u/go-opnsense/opnsense"
 	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
 	p "github.com/pulumi/pulumi-go-provider"
@@ -34,43 +33,49 @@ type HostOverrideArgs struct {
 	//Aliases     *[]HostAliasArgs `pulumi:"aliases,optional"`
 }
 
+var _ = (infer.CustomRead[HostOverrideArgs, HostOverrideState])((*HostOverride)(nil))
+var _ = (infer.CustomUpdate[HostOverrideArgs, HostOverrideState])((*HostOverride)(nil))
+var _ = (infer.CustomDelete[HostOverrideState])((*HostOverride)(nil))
+
 // Each resource has a state, describing the fields that exist on the created resource.
 type HostOverrideState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
 	HostOverrideArgs
 	// Here we define a required output called result.
-	Result string `pulumi:"result"`
+	Id string `pulumi:"result"`
+}
+
+func (HostOverride) GetApi(ctx p.Context) unbound.Overrides {
+	cfg := infer.GetConfig[config.Config](ctx)
+	return unbound.Get_HostOverrides(cfg.Api)
 }
 
 // All resources must implement Create at a minumum.
-func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
+func (h HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
 	ctx.Log(diag.Info, "Running CREATE")
-	cfg := infer.GetConfig[config.Config](ctx)
 	state := HostOverrideState{HostOverrideArgs: input}
 	if preview {
 		return name, state, nil
 	}
 	var err error
-	state.Result, err = createHostOverride(&input, cfg.Api)
-	return state.Result, state, err
+	state.Id, err = h.createHostOverride(ctx, &input)
+	return state.Id, state, err
 }
 
-func (HostOverride) Delete(ctx p.Context, id string, _ HostOverrideArgs) error {
+func (h HostOverride) Delete(ctx p.Context, id string, args HostOverrideState) error {
 	ctx.Log(diag.Info, "Running DELETE")
-	cfg := infer.GetConfig[config.Config](ctx)
-	err := deleteHostOverride(id, cfg.Api)
+	err := h.deleteHostOverride(ctx, id)
 	return err
 }
 
-func (HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
+func (h HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
 	ctx.Log(diag.Info, "Running UPDATE")
 	if preview {
 		return HostOverrideState{
 			HostOverrideArgs: news,
 		}, nil
 	}
-	cfg := infer.GetConfig[config.Config](ctx)
-	overrides := unbound.Get_HostOverrides(cfg.Api)
+	overrides := h.GetApi(ctx)
 	host := HostOverrideArgsToOverridesHost(&news)
 	host.Host.Uuid = id
 	_, err := overrides.Update(host)
@@ -79,10 +84,9 @@ func (HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news
 	}, err
 }
 
-func (HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, state HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
+func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, state HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
 	ctx.Log(diag.Info, "Running READ")
-	cfg := infer.GetConfig[config.Config](ctx)
-	overrides := unbound.Get_HostOverrides(cfg.Api)
+	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
 	newArgs := OverridesHostToHostOverrideArgs(host)
 	return id, *newArgs, HostOverrideState{
@@ -148,14 +152,14 @@ func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new Hos
 	return diff, nil
 }
 
-func deleteHostOverride(id string, api *opnsense.OpnSenseApi) error {
-	overrides := unbound.Get_HostOverrides(api)
+func (h HostOverride) deleteHostOverride(ctx p.Context, id string) error {
+	overrides := h.GetApi(ctx)
 	err := overrides.DeleteByID(id)
 	return err
 }
 
-func createHostOverride(args *HostOverrideArgs, api *opnsense.OpnSenseApi) (string, error) {
-	overrides := unbound.Get_HostOverrides(api)
+func (h HostOverride) createHostOverride(ctx p.Context, args *HostOverrideArgs) (string, error) {
+	overrides := h.GetApi(ctx)
 	newHost := HostOverrideArgsToOverridesHost(args)
 	createdHost, err := overrides.Create(newHost)
 	if err != nil {
