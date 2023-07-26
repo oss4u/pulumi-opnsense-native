@@ -36,8 +36,7 @@ func main() {
 }
 
 func provider() p.Provider {
-
-	return infer.Provider(infer.Options{
+	prv := infer.Provider(infer.Options{
 		Metadata: schema.Metadata{
 			DisplayName: "Opnsense",
 			License:     "Apache-2.0",
@@ -63,4 +62,16 @@ func provider() p.Provider {
 		},
 		Config: infer.Config[*config.Config](),
 	})
+	prv.DiffConfig = diff()
+	return prv
+}
+
+func diff() func(ctx p.Context, req p.DiffRequest) (p.DiffResponse, error) {
+	return func(ctx p.Context, req p.DiffRequest) (p.DiffResponse, error) {
+		return p.DiffResponse{
+			DeleteBeforeReplace: false,
+			HasChanges:          false,
+			DetailedDiff:        nil,
+		}, nil
+	}
 }
