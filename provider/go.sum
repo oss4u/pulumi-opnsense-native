@@ -112,8 +112,8 @@ github.com/opentracing/basictracer-go v1.1.0/go.mod h1:V2HZueSJEp879yv285Aap1BS6
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/opentracing/opentracing-go v1.2.0 h1:uEJPy/1a5RIPAJ0Ov+OIO8OxWu77jEv+1B0VhjKrZUs=
 github.com/opentracing/opentracing-go v1.2.0/go.mod h1:GxEUsuufX4nBwe+T+Wl9TAgYrxe9dPLANfrWvHYVTgc=
-github.com/oss4u/go-opnsense v0.0.7 h1:iOTfy08BUMfGnhxJIb9usknLqpwGUnh4FRjI52Fh2oU=
-github.com/oss4u/go-opnsense v0.0.7/go.mod h1:HirpJ/rGg1G9NzjRqrN5keuBXeXTlTiiIQktwYq4Opc=
+github.com/oss4u/go-opnsense v0.0.8 h1:pCBlAaK7Y+ioNeUv9Hx6UQBfjjFdewb4ltoHEQx8dNI=
+github.com/oss4u/go-opnsense v0.0.8/go.mod h1:HirpJ/rGg1G9NzjRqrN5keuBXeXTlTiiIQktwYq4Opc=
 github.com/pgavlin/goldmark v1.1.33-0.20200616210433-b5eb04559386 h1:LoCV5cscNVWyK5ChN/uCoIFJz8jZD63VQiGJIRgr6uo=
 github.com/pgavlin/goldmark v1.1.33-0.20200616210433-b5eb04559386/go.mod h1:MRxHTJrf9FhdfNQ8Hdeh9gmHevC9RJE/fu8M3JIGjoE=
 github.com/pjbgf/sha1cd v0.3.0 h1:4D5XXmUUBUl/xQ6IjCkEAbqXskkq/4O7LmGn0AqMDs4=
