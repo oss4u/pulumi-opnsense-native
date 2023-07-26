@@ -59,17 +59,21 @@ func (HostOverride) Delete(ctx p.Context, id string, _ HostOverrideArgs) error {
 	return err
 }
 
-func (HostOverride) Update(ctx p.Context, id string, _ HostOverrideArgs, news HostOverrideArgs, preview bool) (HostOverrideArgs, error) {
+func (HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
 	ctx.Log(diag.Info, "Running UPDATE")
 	if preview {
-		return news, nil
+		return HostOverrideState{
+			HostOverrideArgs: news,
+		}, nil
 	}
 	cfg := infer.GetConfig[config.Config](ctx)
 	overrides := unbound.Get_HostOverrides(cfg.Api)
 	host := HostOverrideArgsToOverridesHost(&news)
 	host.Host.Uuid = id
 	_, err := overrides.Update(host)
-	return news, err
+	return HostOverrideState{
+		HostOverrideArgs: news,
+	}, err
 }
 
 func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
