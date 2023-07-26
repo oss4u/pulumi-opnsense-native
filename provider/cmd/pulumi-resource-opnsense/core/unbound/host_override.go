@@ -31,6 +31,7 @@ type HostOverrideArgs struct {
 	Mx          *string `pulumi:"mx,optional"`
 	Server      *string `pulumi:"server,optional"`
 	Description *string `pulumi:"description"`
+	//Aliases     *[]HostAliasArgs `pulumi:"aliases,optional"`
 }
 
 // Each resource has a state, describing the fields that exist on the created resource.
@@ -43,6 +44,7 @@ type HostOverrideState struct {
 
 // All resources must implement Create at a minumum.
 func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
+	ctx.Log(diag.Info, "Running CREATE")
 	cfg := infer.GetConfig[config.Config](ctx)
 	state := HostOverrideState{HostOverrideArgs: input}
 	if preview {
@@ -54,6 +56,7 @@ func (HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, p
 }
 
 func (HostOverride) Delete(ctx p.Context, id string, _ HostOverrideArgs) error {
+	ctx.Log(diag.Info, "Running DELETE")
 	cfg := infer.GetConfig[config.Config](ctx)
 	err := deleteHostOverride(id, cfg.Api)
 	return err
@@ -89,7 +92,7 @@ func (HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, stat
 }
 
 func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
-	ctx.Log(diag.Debug, "Running DIFF")
+	ctx.Log(diag.Info, "Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
 	if *old.Hostname != *new.Hostname {
 		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", *old.Hostname, *new.Hostname))
