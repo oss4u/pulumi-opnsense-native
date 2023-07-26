@@ -71,51 +71,51 @@ func (HostOverride) Update(ctx p.Context, id string, _ HostOverrideArgs, news Ho
 	return news, err
 }
 
-func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideArgs, new HostOverrideArgs) (p.DiffResponse, error) {
+func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
 	if old.Hostname != new.Hostname {
 		ctx.Log(diag.Info, "Hostname differs")
 		diffs["hostname"] = p.PropertyDiff{
-			Kind: p.UpdateReplace,
+			Kind: p.Update,
 		}
 	}
 	if old.Domain != new.Domain {
 		ctx.Log(diag.Info, "Domain differs")
 		diffs["domain"] = p.PropertyDiff{
-			Kind: p.UpdateReplace,
+			Kind: p.Update,
 		}
 	}
 	if old.Description != new.Description {
 		ctx.Log(diag.Info, "Description differs")
 		diffs["description"] = p.PropertyDiff{
-			Kind: p.UpdateReplace,
+			Kind: p.Update,
 		}
 	}
 	if old.Enabled != new.Enabled {
 		ctx.Log(diag.Info, "Enabled differs")
 		diffs["enabled"] = p.PropertyDiff{
-			Kind: p.UpdateReplace,
+			Kind: p.Update,
 		}
 	}
 	if *old.Rr == "A" {
 		if old.Server != new.Server {
 			ctx.Log(diag.Info, "Server differs")
 			diffs["server"] = p.PropertyDiff{
-				Kind: p.UpdateReplace,
+				Kind: p.Update,
 			}
 		}
 	} else if *old.Rr == "MX" {
 		if old.Mx != new.Mx {
 			ctx.Log(diag.Info, "Mx differs")
 			diffs["mx"] = p.PropertyDiff{
-				Kind: p.UpdateReplace,
+				Kind: p.Update,
 			}
 		}
 		if old.MxPrio != new.MxPrio {
 			ctx.Log(diag.Info, "MxPrio differs")
 			diffs["mxprio"] = p.PropertyDiff{
-				Kind: p.UpdateReplace,
+				Kind: p.Update,
 			}
 		}
 
