@@ -95,48 +95,50 @@ func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, st
 	}, err
 }
 
-func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
+func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running DIFF")
+	overrides := h.GetApi(ctx)
+	host, err := overrides.Read(id)
 	diffs := map[string]p.PropertyDiff{}
-	if *old.Hostname != *new.Hostname {
+	if host.Host.Hostname != *new.Hostname {
 		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", *old.Hostname, *new.Hostname))
 		diffs["hostname"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if *old.Domain != *new.Domain {
+	if host.Host.Domain != *new.Domain {
 		ctx.Log(diag.Debug, fmt.Sprintf("Domain differs: %s/%s", *old.Domain, *new.Domain))
 		diffs["domain"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if *old.Description != *new.Description {
+	if host.Host.Description != *new.Description {
 		ctx.Log(diag.Debug, fmt.Sprintf("Description differs: %s/%s", *old.Description, *new.Description))
 		diffs["description"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if *old.Enabled != *new.Enabled {
+	if host.Host.Enabled != *new.Enabled {
 		ctx.Log(diag.Debug, fmt.Sprintf("Enabled differs: %s/%s", *old.Enabled, *new.Enabled))
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if *old.Rr == "A" {
+	if host.Host.Rr == "A" {
 		if *old.Server != *new.Server {
 			ctx.Log(diag.Debug, fmt.Sprintf("Server differs: %s/%s", *old.Server, *new.Server))
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
-	} else if *old.Rr == "MX" {
-		if *old.Mx != *new.Mx {
+	} else if host.Host.Rr == "MX" {
+		if host.Host.Mx != *new.Mx {
 			ctx.Log(diag.Debug, fmt.Sprintf("Mx differs: %s/%s", *old.Mx, *new.Mx))
 			diffs["mx"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
-		if *old.MxPrio != *new.MxPrio {
+		if host.Host.Mxprio != *new.MxPrio {
 			ctx.Log(diag.Debug, fmt.Sprintf("MxPrio differs: %s/%s", *old.MxPrio, *new.MxPrio))
 			diffs["mxprio"] = p.PropertyDiff{
 				Kind: p.Update,
