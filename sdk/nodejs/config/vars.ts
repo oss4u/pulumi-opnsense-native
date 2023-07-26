@@ -8,34 +8,50 @@ declare var exports: any;
 const __config = new pulumi.Config("opnsense");
 
 /**
- * The username. Its important but not secret.
+ * The address of the fw. (without /api)
  */
-export declare const fw_api_address: string | undefined;
-Object.defineProperty(exports, "fw_api_address", {
+export declare const address: string | undefined;
+Object.defineProperty(exports, "address", {
     get() {
-        return __config.get("fw_api_address");
+        return __config.get("address");
     },
     enumerable: true,
 });
 
 /**
- * The password. It is very secret.
+ * The key to access the api of the fw.
  */
-export declare const fw_api_key: string | undefined;
-Object.defineProperty(exports, "fw_api_key", {
+export declare const key: string | undefined;
+Object.defineProperty(exports, "key", {
     get() {
-        return __config.get("fw_api_key");
+        return __config.get("key");
+    },
+    enumerable: true,
+});
+
+export declare const pluginDownloadURL: string | undefined;
+Object.defineProperty(exports, "pluginDownloadURL", {
+    get() {
+        return __config.get("pluginDownloadURL");
     },
     enumerable: true,
 });
 
 /**
- * The (entirely uncryptographic) hash function used to encode the "password".
+ * The secret to access the api of the fw.
  */
-export declare const fw_api_secret: string | undefined;
-Object.defineProperty(exports, "fw_api_secret", {
+export declare const secret: string | undefined;
+Object.defineProperty(exports, "secret", {
     get() {
-        return __config.get("fw_api_secret");
+        return __config.get("secret");
+    },
+    enumerable: true,
+});
+
+export declare const version: string | undefined;
+Object.defineProperty(exports, "version", {
+    get() {
+        return __config.get("version");
     },
     enumerable: true,
 });

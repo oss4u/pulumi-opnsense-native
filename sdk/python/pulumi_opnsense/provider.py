@@ -14,54 +14,76 @@ __all__ = ['ProviderArgs', 'Provider']
 @pulumi.input_type
 class ProviderArgs:
     def __init__(__self__, *,
-                 fw_api_address: pulumi.Input[str],
-                 fw_api_key: pulumi.Input[str],
-                 fw_api_secret: pulumi.Input[str]):
+                 address: pulumi.Input[str],
+                 key: pulumi.Input[str],
+                 plugin_download_url: pulumi.Input[str],
+                 secret: pulumi.Input[str],
+                 version: pulumi.Input[str]):
         """
         The set of arguments for constructing a Provider resource.
-        :param pulumi.Input[str] fw_api_address: The username. Its important but not secret.
-        :param pulumi.Input[str] fw_api_key: The password. It is very secret.
-        :param pulumi.Input[str] fw_api_secret: The (entirely uncryptographic) hash function used to encode the "password".
+        :param pulumi.Input[str] address: The address of the fw. (without /api)
+        :param pulumi.Input[str] key: The key to access the api of the fw.
+        :param pulumi.Input[str] secret: The secret to access the api of the fw.
         """
-        pulumi.set(__self__, "fw_api_address", fw_api_address)
-        pulumi.set(__self__, "fw_api_key", fw_api_key)
-        pulumi.set(__self__, "fw_api_secret", fw_api_secret)
+        pulumi.set(__self__, "address", address)
+        pulumi.set(__self__, "key", key)
+        pulumi.set(__self__, "plugin_download_url", plugin_download_url)
+        pulumi.set(__self__, "secret", secret)
+        pulumi.set(__self__, "version", version)
 
     @property
     @pulumi.getter
-    def fw_api_address(self) -> pulumi.Input[str]:
+    def address(self) -> pulumi.Input[str]:
         """
-        The username. Its important but not secret.
+        The address of the fw. (without /api)
         """
-        return pulumi.get(self, "fw_api_address")
+        return pulumi.get(self, "address")
 
-    @fw_api_address.setter
-    def fw_api_address(self, value: pulumi.Input[str]):
-        pulumi.set(self, "fw_api_address", value)
-
-    @property
-    @pulumi.getter
-    def fw_api_key(self) -> pulumi.Input[str]:
-        """
-        The password. It is very secret.
-        """
-        return pulumi.get(self, "fw_api_key")
-
-    @fw_api_key.setter
-    def fw_api_key(self, value: pulumi.Input[str]):
-        pulumi.set(self, "fw_api_key", value)
+    @address.setter
+    def address(self, value: pulumi.Input[str]):
+        pulumi.set(self, "address", value)
 
     @property
     @pulumi.getter
-    def fw_api_secret(self) -> pulumi.Input[str]:
+    def key(self) -> pulumi.Input[str]:
         """
-        The (entirely uncryptographic) hash function used to encode the "password".
+        The key to access the api of the fw.
         """
-        return pulumi.get(self, "fw_api_secret")
+        return pulumi.get(self, "key")
 
-    @fw_api_secret.setter
-    def fw_api_secret(self, value: pulumi.Input[str]):
-        pulumi.set(self, "fw_api_secret", value)
+    @key.setter
+    def key(self, value: pulumi.Input[str]):
+        pulumi.set(self, "key", value)
+
+    @property
+    @pulumi.getter(name="pluginDownloadURL")
+    def plugin_download_url(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "plugin_download_url")
+
+    @plugin_download_url.setter
+    def plugin_download_url(self, value: pulumi.Input[str]):
+        pulumi.set(self, "plugin_download_url", value)
+
+    @property
+    @pulumi.getter
+    def secret(self) -> pulumi.Input[str]:
+        """
+        The secret to access the api of the fw.
+        """
+        return pulumi.get(self, "secret")
+
+    @secret.setter
+    def secret(self, value: pulumi.Input[str]):
+        pulumi.set(self, "secret", value)
+
+    @property
+    @pulumi.getter
+    def version(self) -> pulumi.Input[str]:
+        return pulumi.get(self, "version")
+
+    @version.setter
+    def version(self, value: pulumi.Input[str]):
+        pulumi.set(self, "version", value)
 
 
 class Provider(pulumi.ProviderResource):
@@ -69,17 +91,19 @@ class Provider(pulumi.ProviderResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 fw_api_address: Optional[pulumi.Input[str]] = None,
-                 fw_api_key: Optional[pulumi.Input[str]] = None,
-                 fw_api_secret: Optional[pulumi.Input[str]] = None,
+                 address: Optional[pulumi.Input[str]] = None,
+                 key: Optional[pulumi.Input[str]] = None,
+                 plugin_download_url: Optional[pulumi.Input[str]] = None,
+                 secret: Optional[pulumi.Input[str]] = None,
+                 version: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         """
         Create a Opnsense resource with the given unique name, props, and options.
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param pulumi.Input[str] fw_api_address: The username. Its important but not secret.
-        :param pulumi.Input[str] fw_api_key: The password. It is very secret.
-        :param pulumi.Input[str] fw_api_secret: The (entirely uncryptographic) hash function used to encode the "password".
+        :param pulumi.Input[str] address: The address of the fw. (without /api)
+        :param pulumi.Input[str] key: The key to access the api of the fw.
+        :param pulumi.Input[str] secret: The secret to access the api of the fw.
         """
         ...
     @overload
@@ -104,9 +128,11 @@ class Provider(pulumi.ProviderResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 fw_api_address: Optional[pulumi.Input[str]] = None,
-                 fw_api_key: Optional[pulumi.Input[str]] = None,
-                 fw_api_secret: Optional[pulumi.Input[str]] = None,
+                 address: Optional[pulumi.Input[str]] = None,
+                 key: Optional[pulumi.Input[str]] = None,
+                 plugin_download_url: Optional[pulumi.Input[str]] = None,
+                 secret: Optional[pulumi.Input[str]] = None,
+                 version: Optional[pulumi.Input[str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
@@ -116,16 +142,22 @@ class Provider(pulumi.ProviderResource):
                 raise TypeError('__props__ is only valid when passed in combination with a valid opts.id to get an existing resource')
             __props__ = ProviderArgs.__new__(ProviderArgs)
 
-            if fw_api_address is None and not opts.urn:
-                raise TypeError("Missing required property 'fw_api_address'")
-            __props__.__dict__["fw_api_address"] = None if fw_api_address is None else pulumi.Output.secret(fw_api_address)
-            if fw_api_key is None and not opts.urn:
-                raise TypeError("Missing required property 'fw_api_key'")
-            __props__.__dict__["fw_api_key"] = None if fw_api_key is None else pulumi.Output.secret(fw_api_key)
-            if fw_api_secret is None and not opts.urn:
-                raise TypeError("Missing required property 'fw_api_secret'")
-            __props__.__dict__["fw_api_secret"] = None if fw_api_secret is None else pulumi.Output.secret(fw_api_secret)
-        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["fw_api_address", "fw_api_key", "fw_api_secret"])
+            if address is None and not opts.urn:
+                raise TypeError("Missing required property 'address'")
+            __props__.__dict__["address"] = None if address is None else pulumi.Output.secret(address)
+            if key is None and not opts.urn:
+                raise TypeError("Missing required property 'key'")
+            __props__.__dict__["key"] = None if key is None else pulumi.Output.secret(key)
+            if plugin_download_url is None and not opts.urn:
+                raise TypeError("Missing required property 'plugin_download_url'")
+            __props__.__dict__["plugin_download_url"] = plugin_download_url
+            if secret is None and not opts.urn:
+                raise TypeError("Missing required property 'secret'")
+            __props__.__dict__["secret"] = None if secret is None else pulumi.Output.secret(secret)
+            if version is None and not opts.urn:
+                raise TypeError("Missing required property 'version'")
+            __props__.__dict__["version"] = version
+        secret_opts = pulumi.ResourceOptions(additional_secret_outputs=["address", "key", "secret"])
         opts = pulumi.ResourceOptions.merge(opts, secret_opts)
         super(Provider, __self__).__init__(
             'opnsense',
@@ -135,25 +167,35 @@ class Provider(pulumi.ProviderResource):
 
     @property
     @pulumi.getter
-    def fw_api_address(self) -> pulumi.Output[str]:
+    def address(self) -> pulumi.Output[str]:
         """
-        The username. Its important but not secret.
+        The address of the fw. (without /api)
         """
-        return pulumi.get(self, "fw_api_address")
+        return pulumi.get(self, "address")
 
     @property
     @pulumi.getter
-    def fw_api_key(self) -> pulumi.Output[str]:
+    def key(self) -> pulumi.Output[str]:
         """
-        The password. It is very secret.
+        The key to access the api of the fw.
         """
-        return pulumi.get(self, "fw_api_key")
+        return pulumi.get(self, "key")
+
+    @property
+    @pulumi.getter(name="pluginDownloadURL")
+    def plugin_download_url(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "plugin_download_url")
 
     @property
     @pulumi.getter
-    def fw_api_secret(self) -> pulumi.Output[str]:
+    def secret(self) -> pulumi.Output[str]:
         """
-        The (entirely uncryptographic) hash function used to encode the "password".
+        The secret to access the api of the fw.
         """
-        return pulumi.get(self, "fw_api_secret")
+        return pulumi.get(self, "secret")
+
+    @property
+    @pulumi.getter
+    def version(self) -> pulumi.Output[str]:
+        return pulumi.get(self, "version")
 

@@ -14,22 +14,28 @@ namespace Oss4u.Opnsense
     public partial class Provider : global::Pulumi.ProviderResource
     {
         /// <summary>
-        /// The username. Its important but not secret.
+        /// The address of the fw. (without /api)
         /// </summary>
-        [Output("fw_api_address")]
-        public Output<string> Fw_api_address { get; private set; } = null!;
+        [Output("address")]
+        public Output<string> Address { get; private set; } = null!;
 
         /// <summary>
-        /// The password. It is very secret.
+        /// The key to access the api of the fw.
         /// </summary>
-        [Output("fw_api_key")]
-        public Output<string> Fw_api_key { get; private set; } = null!;
+        [Output("key")]
+        public Output<string> Key { get; private set; } = null!;
+
+        [Output("pluginDownloadURL")]
+        public Output<string> PluginDownloadURL { get; private set; } = null!;
 
         /// <summary>
-        /// The (entirely uncryptographic) hash function used to encode the "password".
+        /// The secret to access the api of the fw.
         /// </summary>
-        [Output("fw_api_secret")]
-        public Output<string> Fw_api_secret { get; private set; } = null!;
+        [Output("secret")]
+        public Output<string> Secret { get; private set; } = null!;
+
+        [Output("version")]
+        public Output<string> Version { get; private set; } = null!;
 
 
         /// <summary>
@@ -52,9 +58,9 @@ namespace Oss4u.Opnsense
                 PluginDownloadURL = "github://api.github.com/oss4u/pulumi-opnsense-native",
                 AdditionalSecretOutputs =
                 {
-                    "fw_api_address",
-                    "fw_api_key",
-                    "fw_api_secret",
+                    "address",
+                    "key",
+                    "secret",
                 },
             };
             var merged = CustomResourceOptions.Merge(defaultOptions, options);
@@ -66,53 +72,59 @@ namespace Oss4u.Opnsense
 
     public sealed class ProviderArgs : global::Pulumi.ResourceArgs
     {
-        [Input("fw_api_address", required: true)]
-        private Input<string>? _fw_api_address;
+        [Input("address", required: true)]
+        private Input<string>? _address;
 
         /// <summary>
-        /// The username. Its important but not secret.
+        /// The address of the fw. (without /api)
         /// </summary>
-        public Input<string>? Fw_api_address
+        public Input<string>? Address
         {
-            get => _fw_api_address;
+            get => _address;
             set
             {
                 var emptySecret = Output.CreateSecret(0);
-                _fw_api_address = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+                _address = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
             }
         }
 
-        [Input("fw_api_key", required: true)]
-        private Input<string>? _fw_api_key;
+        [Input("key", required: true)]
+        private Input<string>? _key;
 
         /// <summary>
-        /// The password. It is very secret.
+        /// The key to access the api of the fw.
         /// </summary>
-        public Input<string>? Fw_api_key
+        public Input<string>? Key
         {
-            get => _fw_api_key;
+            get => _key;
             set
             {
                 var emptySecret = Output.CreateSecret(0);
-                _fw_api_key = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+                _key = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
             }
         }
 
-        [Input("fw_api_secret", required: true)]
-        private Input<string>? _fw_api_secret;
+        [Input("pluginDownloadURL", required: true)]
+        public Input<string> PluginDownloadURL { get; set; } = null!;
+
+        [Input("secret", required: true)]
+        private Input<string>? _secret;
 
         /// <summary>
-        /// The (entirely uncryptographic) hash function used to encode the "password".
+        /// The secret to access the api of the fw.
         /// </summary>
-        public Input<string>? Fw_api_secret
+        public Input<string>? Secret
         {
-            get => _fw_api_secret;
+            get => _secret;
             set
             {
                 var emptySecret = Output.CreateSecret(0);
-                _fw_api_secret = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
+                _secret = Output.Tuple<Input<string>?, int>(value, emptySecret).Apply(t => t.Item1);
             }
         }
+
+        [Input("version", required: true)]
+        public Input<string> Version { get; set; } = null!;
 
         public ProviderArgs()
         {

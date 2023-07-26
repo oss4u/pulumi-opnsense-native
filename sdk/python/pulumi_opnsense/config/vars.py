@@ -16,23 +16,31 @@ __config__ = pulumi.Config('opnsense')
 
 class _ExportableConfig(types.ModuleType):
     @property
-    def fw_api_address(self) -> Optional[str]:
+    def address(self) -> Optional[str]:
         """
-        The username. Its important but not secret.
+        The address of the fw. (without /api)
         """
-        return __config__.get('fw_api_address')
+        return __config__.get('address')
 
     @property
-    def fw_api_key(self) -> Optional[str]:
+    def key(self) -> Optional[str]:
         """
-        The password. It is very secret.
+        The key to access the api of the fw.
         """
-        return __config__.get('fw_api_key')
+        return __config__.get('key')
 
     @property
-    def fw_api_secret(self) -> Optional[str]:
+    def plugin_download_url(self) -> Optional[str]:
+        return __config__.get('pluginDownloadURL')
+
+    @property
+    def secret(self) -> Optional[str]:
         """
-        The (entirely uncryptographic) hash function used to encode the "password".
+        The secret to access the api of the fw.
         """
-        return __config__.get('fw_api_secret')
+        return __config__.get('secret')
+
+    @property
+    def version(self) -> Optional[str]:
+        return __config__.get('version')
 

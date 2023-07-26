@@ -32,34 +32,48 @@ namespace Oss4u.Opnsense
 
         private static readonly global::Pulumi.Config __config = new global::Pulumi.Config("opnsense");
 
-        private static readonly __Value<string?> _fw_api_address = new __Value<string?>(() => __config.Get("fw_api_address"));
+        private static readonly __Value<string?> _address = new __Value<string?>(() => __config.Get("address"));
         /// <summary>
-        /// The username. Its important but not secret.
+        /// The address of the fw. (without /api)
         /// </summary>
-        public static string? Fw_api_address
+        public static string? Address
         {
-            get => _fw_api_address.Get();
-            set => _fw_api_address.Set(value);
+            get => _address.Get();
+            set => _address.Set(value);
         }
 
-        private static readonly __Value<string?> _fw_api_key = new __Value<string?>(() => __config.Get("fw_api_key"));
+        private static readonly __Value<string?> _key = new __Value<string?>(() => __config.Get("key"));
         /// <summary>
-        /// The password. It is very secret.
+        /// The key to access the api of the fw.
         /// </summary>
-        public static string? Fw_api_key
+        public static string? Key
         {
-            get => _fw_api_key.Get();
-            set => _fw_api_key.Set(value);
+            get => _key.Get();
+            set => _key.Set(value);
         }
 
-        private static readonly __Value<string?> _fw_api_secret = new __Value<string?>(() => __config.Get("fw_api_secret"));
-        /// <summary>
-        /// The (entirely uncryptographic) hash function used to encode the "password".
-        /// </summary>
-        public static string? Fw_api_secret
+        private static readonly __Value<string?> _pluginDownloadURL = new __Value<string?>(() => __config.Get("pluginDownloadURL"));
+        public static string? PluginDownloadURL
         {
-            get => _fw_api_secret.Get();
-            set => _fw_api_secret.Set(value);
+            get => _pluginDownloadURL.Get();
+            set => _pluginDownloadURL.Set(value);
+        }
+
+        private static readonly __Value<string?> _secret = new __Value<string?>(() => __config.Get("secret"));
+        /// <summary>
+        /// The secret to access the api of the fw.
+        /// </summary>
+        public static string? Secret
+        {
+            get => _secret.Get();
+            set => _secret.Set(value);
+        }
+
+        private static readonly __Value<string?> _version = new __Value<string?>(() => __config.Get("version"));
+        public static string? Version
+        {
+            get => _version.Get();
+            set => _version.Set(value);
         }
 
     }

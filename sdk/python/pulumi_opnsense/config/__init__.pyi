@@ -9,18 +9,22 @@ import pulumi.runtime
 from typing import Any, Mapping, Optional, Sequence, Union, overload
 from .. import _utilities
 
-fw_api_address: Optional[str]
+address: Optional[str]
 """
-The username. Its important but not secret.
-"""
-
-fw_api_key: Optional[str]
-"""
-The password. It is very secret.
+The address of the fw. (without /api)
 """
 
-fw_api_secret: Optional[str]
+key: Optional[str]
 """
-The (entirely uncryptographic) hash function used to encode the "password".
+The key to access the api of the fw.
 """
+
+pluginDownloadURL: Optional[str]
+
+secret: Optional[str]
+"""
+The secret to access the api of the fw.
+"""
+
+version: Optional[str]
 

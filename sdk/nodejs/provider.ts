@@ -20,17 +20,19 @@ export class Provider extends pulumi.ProviderResource {
     }
 
     /**
-     * The username. Its important but not secret.
+     * The address of the fw. (without /api)
      */
-    public readonly fw_api_address!: pulumi.Output<string>;
+    public readonly address!: pulumi.Output<string>;
     /**
-     * The password. It is very secret.
+     * The key to access the api of the fw.
      */
-    public readonly fw_api_key!: pulumi.Output<string>;
+    public readonly key!: pulumi.Output<string>;
+    public readonly pluginDownloadURL!: pulumi.Output<string>;
     /**
-     * The (entirely uncryptographic) hash function used to encode the "password".
+     * The secret to access the api of the fw.
      */
-    public readonly fw_api_secret!: pulumi.Output<string>;
+    public readonly secret!: pulumi.Output<string>;
+    public readonly version!: pulumi.Output<string>;
 
     /**
      * Create a Provider resource with the given unique name, arguments, and options.
@@ -43,21 +45,29 @@ export class Provider extends pulumi.ProviderResource {
         let resourceInputs: pulumi.Inputs = {};
         opts = opts || {};
         {
-            if ((!args || args.fw_api_address === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'fw_api_address'");
+            if ((!args || args.address === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'address'");
             }
-            if ((!args || args.fw_api_key === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'fw_api_key'");
+            if ((!args || args.key === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'key'");
             }
-            if ((!args || args.fw_api_secret === undefined) && !opts.urn) {
-                throw new Error("Missing required property 'fw_api_secret'");
+            if ((!args || args.pluginDownloadURL === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'pluginDownloadURL'");
             }
-            resourceInputs["fw_api_address"] = args?.fw_api_address ? pulumi.secret(args.fw_api_address) : undefined;
-            resourceInputs["fw_api_key"] = args?.fw_api_key ? pulumi.secret(args.fw_api_key) : undefined;
-            resourceInputs["fw_api_secret"] = args?.fw_api_secret ? pulumi.secret(args.fw_api_secret) : undefined;
+            if ((!args || args.secret === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'secret'");
+            }
+            if ((!args || args.version === undefined) && !opts.urn) {
+                throw new Error("Missing required property 'version'");
+            }
+            resourceInputs["address"] = args?.address ? pulumi.secret(args.address) : undefined;
+            resourceInputs["key"] = args?.key ? pulumi.secret(args.key) : undefined;
+            resourceInputs["pluginDownloadURL"] = args ? args.pluginDownloadURL : undefined;
+            resourceInputs["secret"] = args?.secret ? pulumi.secret(args.secret) : undefined;
+            resourceInputs["version"] = args ? args.version : undefined;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
-        const secretOpts = { additionalSecretOutputs: ["fw_api_address", "fw_api_key", "fw_api_secret"] };
+        const secretOpts = { additionalSecretOutputs: ["address", "key", "secret"] };
         opts = pulumi.mergeOptions(opts, secretOpts);
         super(Provider.__pulumiType, name, resourceInputs, opts);
     }
@@ -68,15 +78,17 @@ export class Provider extends pulumi.ProviderResource {
  */
 export interface ProviderArgs {
     /**
-     * The username. Its important but not secret.
+     * The address of the fw. (without /api)
      */
-    fw_api_address: pulumi.Input<string>;
+    address: pulumi.Input<string>;
     /**
-     * The password. It is very secret.
+     * The key to access the api of the fw.
      */
-    fw_api_key: pulumi.Input<string>;
+    key: pulumi.Input<string>;
+    pluginDownloadURL: pulumi.Input<string>;
     /**
-     * The (entirely uncryptographic) hash function used to encode the "password".
+     * The secret to access the api of the fw.
      */
-    fw_api_secret: pulumi.Input<string>;
+    secret: pulumi.Input<string>;
+    version: pulumi.Input<string>;
 }

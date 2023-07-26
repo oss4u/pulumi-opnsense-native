@@ -11,17 +11,23 @@ import (
 
 var _ = internal.GetEnvOrDefault
 
-// The username. Its important but not secret.
-func GetFw_api_address(ctx *pulumi.Context) string {
-	return config.Get(ctx, "opnsense:fw_api_address")
+// The address of the fw. (without /api)
+func GetAddress(ctx *pulumi.Context) string {
+	return config.Get(ctx, "opnsense:address")
 }
 
-// The password. It is very secret.
-func GetFw_api_key(ctx *pulumi.Context) string {
-	return config.Get(ctx, "opnsense:fw_api_key")
+// The key to access the api of the fw.
+func GetKey(ctx *pulumi.Context) string {
+	return config.Get(ctx, "opnsense:key")
+}
+func GetPluginDownloadURL(ctx *pulumi.Context) string {
+	return config.Get(ctx, "opnsense:pluginDownloadURL")
 }
 
-// The (entirely uncryptographic) hash function used to encode the "password".
-func GetFw_api_secret(ctx *pulumi.Context) string {
-	return config.Get(ctx, "opnsense:fw_api_secret")
+// The secret to access the api of the fw.
+func GetSecret(ctx *pulumi.Context) string {
+	return config.Get(ctx, "opnsense:secret")
+}
+func GetVersion(ctx *pulumi.Context) string {
+	return config.Get(ctx, "opnsense:version")
 }
