@@ -36,6 +36,7 @@ func main() {
 }
 
 func provider() p.Provider {
+
 	return infer.Provider(infer.Options{
 		Metadata: schema.Metadata{
 			DisplayName: "Opnsense",
