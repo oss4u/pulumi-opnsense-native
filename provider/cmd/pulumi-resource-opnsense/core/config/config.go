@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/oss4u/go-opnsense/opnsense"
 	provider "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -31,8 +32,10 @@ func (c *Config) Configure(ctx provider.Context) error {
 	return nil
 }
 
-func (c *Config) Diff(ctx provider.Context, id string, olds Config, news Config) (provider.DiffResponse, error) {
+func (c *Config) Diff(ctx provider.Context, id string, olds any, news Config) (provider.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running Diff - Config")
+	ctx.Log(diag.Info, fmt.Sprintf("ConfigOLD: %+v", olds))
+	ctx.Log(diag.Info, fmt.Sprintf("ConfigNEW: %+v", news))
 	return provider.DiffResponse{
 		HasChanges:          false,
 		DeleteBeforeReplace: false,
