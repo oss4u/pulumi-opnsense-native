@@ -76,6 +76,18 @@ func (HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news
 	}, err
 }
 
+func (HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, state HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
+	ctx.Log(diag.Info, "Running READ")
+	cfg := infer.GetConfig[config.Config](ctx)
+	overrides := unbound.Get_HostOverrides(cfg.Api)
+	host, err := overrides.Read(id)
+	newArgs := OverridesHostToHostOverrideArgs(host)
+	return id, *newArgs, HostOverrideState{
+		HostOverrideArgs: *newArgs,
+		Result:           id,
+	}, err
+}
+
 func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Debug, "Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
