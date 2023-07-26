@@ -99,7 +99,7 @@ func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new 
 	ctx.Log(diag.Info, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	result, err := overrides.Read(id)
-	ctx.Log(diag.Info, fmt.Sprintf("Retval: %s", result))
+	ctx.Log(diag.Info, fmt.Sprintf("Retval: %+v", result))
 	if result == nil || result.Host.Hostname == "" {
 		return p.DiffResponse{
 			DeleteBeforeReplace: true,
