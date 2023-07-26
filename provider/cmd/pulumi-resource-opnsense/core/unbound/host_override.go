@@ -81,45 +81,45 @@ func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new Hos
 	ctx.Log(diag.Info, fmt.Sprintf("OLD: %+v", old))
 	ctx.Log(diag.Info, fmt.Sprintf("NEW: %+v", new))
 	diffs := map[string]p.PropertyDiff{}
-	if old.Hostname != new.Hostname {
+	if *old.Hostname != *new.Hostname {
 		ctx.Log(diag.Info, fmt.Sprintf("Hostname differs: %s/%s", *old.Hostname, *new.Hostname))
 		diffs["hostname"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if old.Domain != new.Domain {
+	if *old.Domain != *new.Domain {
 		ctx.Log(diag.Info, fmt.Sprintf("Domain differs: %s/%s", *old.Domain, *new.Domain))
 		diffs["domain"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if old.Description != new.Description {
+	if *old.Description != *new.Description {
 		ctx.Log(diag.Info, fmt.Sprintf("Description differs: %s/%s", *old.Description, *new.Description))
 		diffs["description"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if old.Enabled != new.Enabled {
+	if *old.Enabled != *new.Enabled {
 		ctx.Log(diag.Info, fmt.Sprintf("Enabled differs: %s/%s", *old.Enabled, *new.Enabled))
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if *old.Rr == "A" {
-		if old.Server != new.Server {
+		if *old.Server != *new.Server {
 			ctx.Log(diag.Info, fmt.Sprintf("Server differs: %s/%s", *old.Server, *new.Server))
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
 	} else if *old.Rr == "MX" {
-		if old.Mx != new.Mx {
+		if *old.Mx != *new.Mx {
 			ctx.Log(diag.Info, fmt.Sprintf("Mx differs: %s/%s", *old.Mx, *new.Mx))
 			diffs["mx"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
-		if old.MxPrio != new.MxPrio {
+		if *old.MxPrio != *new.MxPrio {
 			ctx.Log(diag.Info, fmt.Sprintf("MxPrio differs: %s/%s", *old.MxPrio, *new.MxPrio))
 			diffs["mxprio"] = p.PropertyDiff{
 				Kind: p.Update,
