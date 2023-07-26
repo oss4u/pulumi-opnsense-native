@@ -99,6 +99,9 @@ func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new 
 	ctx.Log(diag.Info, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
+	if err != nil {
+		host = &unbound.OverridesHost{Host: unbound.OverridesHostDetails{}}
+	}
 	diffs := map[string]p.PropertyDiff{}
 	if host.Host.Hostname != *new.Hostname {
 		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", *old.Hostname, *new.Hostname))
