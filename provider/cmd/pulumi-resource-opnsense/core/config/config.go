@@ -32,7 +32,7 @@ func (c *Config) Configure(ctx provider.Context) error {
 	return nil
 }
 
-func (c *Config) diffConfig(ctx provider.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
+func (*Config) diffConfig(ctx provider.Context, req provider.DiffRequest) (provider.DiffResponse, error) {
 	return provider.DiffResponse{
 		DeleteBeforeReplace: false,
 		HasChanges:          false,
@@ -40,7 +40,9 @@ func (c *Config) diffConfig(ctx provider.Context, req provider.DiffRequest) (pro
 	}, nil
 }
 
-func (c *Config) Diff(ctx provider.Context, id string, olds any, news Config) (provider.DiffResponse, error) {
+var _ = (infer.CustomDiff[Config, Config])((*Config)(nil))
+
+func (*Config) Diff(ctx provider.Context, id string, olds Config, news Config) (provider.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running Diff - Config")
 	ctx.Log(diag.Info, fmt.Sprintf("ConfigOLD: %+v", olds))
 	ctx.Log(diag.Info, fmt.Sprintf("ConfigNEW: %+v", news))
