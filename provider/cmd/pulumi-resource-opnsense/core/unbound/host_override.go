@@ -77,7 +77,7 @@ func (HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news
 }
 
 func (HostOverride) Diff(ctx p.Context, _ string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
-	ctx.Log(diag.Info, "Running DIFF")
+	ctx.Log(diag.Debug, "Running DIFF")
 	diffs := map[string]p.PropertyDiff{}
 	if *old.Hostname != *new.Hostname {
 		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", *old.Hostname, *new.Hostname))
