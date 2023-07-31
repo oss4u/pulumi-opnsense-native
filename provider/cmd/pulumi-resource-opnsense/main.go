@@ -57,7 +57,7 @@ func provider() p.Provider {
 			PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
 		},
 		Resources: []infer.InferredResource{
-			//infer.Resource[unbound.HostAlias, unbound.HostAliasArgs, unbound.HostAliasState](),
+			//infer.Resource[unbound.HostAliasOverride, unbound.HostAliasOverrideArgs, unbound.HostAliasOverrideState](),
 			infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),
 		},
 		Config: infer.Config[*config.Config](),

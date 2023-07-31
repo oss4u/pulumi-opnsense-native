@@ -96,7 +96,7 @@ func (i *HostAlias) ToHostAliasOutputWithContext(ctx context.Context) HostAliasO
 // HostAliasArrayInput is an input type that accepts HostAliasArray and HostAliasArrayOutput values.
 // You can construct a concrete instance of `HostAliasArrayInput` via:
 //
-//	HostAliasArray{ HostAliasArgs{...} }
+//	HostAliasArray{ HostAliasOverrideArgs{...} }
 type HostAliasArrayInput interface {
 	pulumi.Input
 
@@ -121,7 +121,7 @@ func (i HostAliasArray) ToHostAliasArrayOutputWithContext(ctx context.Context) H
 // HostAliasMapInput is an input type that accepts HostAliasMap and HostAliasMapOutput values.
 // You can construct a concrete instance of `HostAliasMapInput` via:
 //
-//	HostAliasMap{ "key": HostAliasArgs{...} }
+//	HostAliasMap{ "key": HostAliasOverrideArgs{...} }
 type HostAliasMapInput interface {
 	pulumi.Input
 

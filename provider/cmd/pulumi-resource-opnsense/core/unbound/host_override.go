@@ -2,7 +2,7 @@ package unbound
 
 import (
 	"fmt"
-	"github.com/oss4u/go-opnsense/opnsense/core/unbound/overrides"
+	gooverrides "github.com/oss4u/go-opnsense/opnsense/core/unbound/overrides"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -30,14 +30,13 @@ type HostOverrideArgs struct {
 	Mx          *string `pulumi:"mx,optional"`
 	Server      *string `pulumi:"server,optional"`
 	Description *string `pulumi:"description"`
-	//Aliases     *[]HostAliasArgs `pulumi:"aliases,optional"`
+	//Aliases     *[]HostAliasOverrideArgs `pulumi:"aliases,optional"`
 }
 
 var _ = (infer.CustomRead[HostOverrideArgs, HostOverrideState])((*HostOverride)(nil))
 var _ = (infer.CustomUpdate[HostOverrideArgs, HostOverrideState])((*HostOverride)(nil))
 var _ = (infer.CustomDelete[HostOverrideState])((*HostOverride)(nil))
 
-// Each resource has a state, describing the fields that exist on the created resource.
 type HostOverrideState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
 	HostOverrideArgs
@@ -45,13 +44,12 @@ type HostOverrideState struct {
 	Id string `pulumi:"result"`
 }
 
-func (HostOverride) GetApi(ctx p.Context) overrides.OverridesHostsApi {
+func (HostOverride) GetApi(ctx p.Context) gooverrides.OverridesHostsApi {
 	cfg := infer.GetConfig[config.Config](ctx)
 
-	return overrides.GetHostsOverrideApi(cfg.Api)
+	return gooverrides.GetHostsOverrideApi(cfg.Api)
 }
 
-// All resources must implement Create at a minumum.
 func (h HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
 	ctx.Log(diag.Info, "Running CREATE")
 	state := HostOverrideState{HostOverrideArgs: input}
@@ -127,28 +125,28 @@ func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new 
 			Kind: p.Update,
 		}
 	}
-	if result.Host.Enabled != *new.Enabled {
-		ctx.Log(diag.Info, fmt.Sprintf("Enabled differs: %s/%s", result.Host.Enabled, *new.Enabled))
+	if result.Host.Enabled.Bool() != *new.Enabled {
+		ctx.Log(diag.Info, fmt.Sprintf("Enabled differs: %t/%t", result.Host.Enabled.Bool(), *new.Enabled))
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
-	if result.Host.Rr == "A" {
+	if result.Host.Rr.String() == "A" {
 		if result.Host.Server != *new.Server {
 			ctx.Log(diag.Info, fmt.Sprintf("Server differs: %s/%s", result.Host.Server, *new.Server))
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
-	} else if result.Host.Rr == "MX" {
+	} else if result.Host.Rr.String() == "MX" {
 		if result.Host.Mx != *new.Mx {
 			ctx.Log(diag.Info, fmt.Sprintf("Mx differs: %s/%s", result.Host.Mx, *new.Mx))
 			diffs["mx"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
-		if result.Host.Mxprio != *new.MxPrio {
-			ctx.Log(diag.Info, fmt.Sprintf("MxPrio differs: %s/%s", result.Host.Mxprio, *new.MxPrio))
+		if result.Host.Mxprio.Int() != *new.MxPrio {
+			ctx.Log(diag.Info, fmt.Sprintf("MxPrio differs: %d/%d", result.Host.Mxprio.Int(), *new.MxPrio))
 			diffs["mxprio"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
