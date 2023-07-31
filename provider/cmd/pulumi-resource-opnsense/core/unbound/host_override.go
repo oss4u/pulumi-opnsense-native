@@ -2,7 +2,7 @@ package unbound
 
 import (
 	"fmt"
-	"github.com/oss4u/go-opnsense/opnsense/core/unbound"
+	"github.com/oss4u/go-opnsense/opnsense/core/unbound/overrides"
 	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
@@ -45,9 +45,10 @@ type HostOverrideState struct {
 	Id string `pulumi:"result"`
 }
 
-func (HostOverride) GetApi(ctx p.Context) unbound.Overrides {
+func (HostOverride) GetApi(ctx p.Context) overrides.OverridesHostsApi {
 	cfg := infer.GetConfig[config.Config](ctx)
-	return unbound.Get_HostOverrides(cfg.Api)
+
+	return overrides.GetHostsOverrideApi(cfg.Api)
 }
 
 // All resources must implement Create at a minumum.
