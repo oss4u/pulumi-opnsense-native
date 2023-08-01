@@ -11,7 +11,6 @@ import (
 
 type HostAliasOverride struct{}
 
-// Each resource has in input struct, defining what arguments it accepts.
 type HostAliasOverrideArgs struct {
 	Enabled     *bool   `pulumi:"enabled"`
 	Host        *string `pulumi:"host"`
@@ -35,7 +34,6 @@ var _ = (infer.CustomUpdate[HostAliasOverrideArgs, HostAliasOverrideState])((*Ho
 var _ = (infer.CustomDelete[HostAliasOverrideState])((*HostAliasOverride)(nil))
 var _ = (infer.CustomDiff[HostAliasOverrideArgs, HostAliasOverrideState])((*HostAliasOverride)(nil))
 
-// Each resource has a state, describing the fields that exist on the created resource.
 type HostAliasOverrideState struct {
 	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
 	HostAliasOverrideArgs
@@ -60,13 +58,13 @@ func (h HostAliasOverride) Create(ctx p.Context, name string, input HostAliasOve
 	return state.Id, state, err
 }
 
-func (h HostAliasOverride) Delete(ctx p.Context, id string, args HostAliasOverrideState) error {
+func (h HostAliasOverride) Delete(ctx p.Context, id string, _ HostAliasOverrideState) error {
 	ctx.Log(diag.Info, "Running DELETE")
 	err := h.deleteHostAliasOverride(ctx, id)
 	return err
 }
 
-func (h HostAliasOverride) Update(ctx p.Context, id string, old HostAliasOverrideState, news HostAliasOverrideArgs, preview bool) (HostAliasOverrideState, error) {
+func (h HostAliasOverride) Update(ctx p.Context, id string, _ HostAliasOverrideState, news HostAliasOverrideArgs, preview bool) (HostAliasOverrideState, error) {
 	ctx.Log(diag.Info, "Running UPDATE")
 	if preview {
 		return HostAliasOverrideState{
@@ -82,7 +80,7 @@ func (h HostAliasOverride) Update(ctx p.Context, id string, old HostAliasOverrid
 	}, err
 }
 
-func (h HostAliasOverride) Read(ctx p.Context, id string, inputs HostAliasOverrideArgs, state HostAliasOverrideState) (canonicalID string, normalizedInputs HostAliasOverrideArgs, normalizedState HostAliasOverrideState, err error) {
+func (h HostAliasOverride) Read(ctx p.Context, id string, inputs HostAliasOverrideArgs, _ HostAliasOverrideState) (canonicalID string, normalizedInputs HostAliasOverrideArgs, normalizedState HostAliasOverrideState, err error) {
 	ctx.Log(diag.Info, "Running READ")
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
@@ -93,7 +91,7 @@ func (h HostAliasOverride) Read(ctx p.Context, id string, inputs HostAliasOverri
 	}, err
 }
 
-func (h HostAliasOverride) Diff(ctx p.Context, id string, old HostAliasOverrideState, new HostAliasOverrideArgs) (p.DiffResponse, error) {
+func (h HostAliasOverride) Diff(ctx p.Context, id string, _ HostAliasOverrideState, new HostAliasOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	result, err := overrides.Read(id)

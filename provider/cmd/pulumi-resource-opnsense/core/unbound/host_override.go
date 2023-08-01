@@ -51,13 +51,13 @@ func (h HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs,
 	return state.Id, state, err
 }
 
-func (h HostOverride) Delete(ctx p.Context, id string, args HostOverrideState) error {
+func (h HostOverride) Delete(ctx p.Context, id string, _ HostOverrideState) error {
 	ctx.Log(diag.Info, "Running DELETE")
 	err := h.deleteHostOverride(ctx, id)
 	return err
 }
 
-func (h HostOverride) Update(ctx p.Context, id string, old HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
+func (h HostOverride) Update(ctx p.Context, id string, _ HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
 	ctx.Log(diag.Info, "Running UPDATE")
 	if preview {
 		return HostOverrideState{
@@ -73,7 +73,7 @@ func (h HostOverride) Update(ctx p.Context, id string, old HostOverrideState, ne
 	}, err
 }
 
-func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, state HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
+func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, _ HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
 	ctx.Log(diag.Info, "Running READ")
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
@@ -84,7 +84,7 @@ func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, st
 	}, err
 }
 
-func (h HostOverride) Diff(ctx p.Context, id string, old HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
+func (h HostOverride) Diff(ctx p.Context, id string, _ HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
 	ctx.Log(diag.Info, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	result, err := overrides.Read(id)
