@@ -9,16 +9,6 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/common/diag"
 )
 
-// Each resource has a controlling struct.
-// Resource behavior is determined by implementing methods on the controlling struct.
-// The `Create` method is mandatory, but other methods are optional.
-// - Check: Remap inputs before they are typed.
-// - Diff: Change how instances of a resource are compared.
-// - Update: Mutate a resource in place.
-// - Read: Get the state of a resource from the backing provider.
-// - Delete: Custom logic when the resource is deleted.
-// - Annotate: Describe fields and set defaults for a resource.
-// - WireDependencies: Control how outputs and secrets flows through values.
 type HostAliasOverride struct{}
 
 // Each resource has in input struct, defining what arguments it accepts.
@@ -59,7 +49,6 @@ func (HostAliasOverride) GetApi(ctx p.Context) gooverrides.OverridesAliasesApi {
 	return gooverrides.GetAliasesOverrideApi(cfg.Api)
 }
 
-// All resources must implement Create at a minumum.
 func (h HostAliasOverride) Create(ctx p.Context, name string, input HostAliasOverrideArgs, preview bool) (string, HostAliasOverrideState, error) {
 	ctx.Log(diag.Info, "Running CREATE")
 	state := HostAliasOverrideState{HostAliasOverrideArgs: input}
