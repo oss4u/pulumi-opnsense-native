@@ -48,7 +48,7 @@ func (HostAliasOverride) GetApi(ctx p.Context) gooverrides.OverridesAliasesApi {
 }
 
 func (h HostAliasOverride) Create(ctx p.Context, name string, input HostAliasOverrideArgs, preview bool) (string, HostAliasOverrideState, error) {
-	ctx.Log(diag.Info, "Running CREATE")
+	ctx.Log(diag.Debug, "Running CREATE")
 	state := HostAliasOverrideState{HostAliasOverrideArgs: input}
 	if preview {
 		return name, state, nil
@@ -59,13 +59,13 @@ func (h HostAliasOverride) Create(ctx p.Context, name string, input HostAliasOve
 }
 
 func (h HostAliasOverride) Delete(ctx p.Context, id string, _ HostAliasOverrideState) error {
-	ctx.Log(diag.Info, "Running DELETE")
+	ctx.Log(diag.Debug, "Running DELETE")
 	err := h.deleteHostAliasOverride(ctx, id)
 	return err
 }
 
 func (h HostAliasOverride) Update(ctx p.Context, id string, _ HostAliasOverrideState, news HostAliasOverrideArgs, preview bool) (HostAliasOverrideState, error) {
-	ctx.Log(diag.Info, "Running UPDATE")
+	ctx.Log(diag.Debug, "Running UPDATE")
 	if preview {
 		return HostAliasOverrideState{
 			HostAliasOverrideArgs: news,
@@ -81,7 +81,7 @@ func (h HostAliasOverride) Update(ctx p.Context, id string, _ HostAliasOverrideS
 }
 
 func (h HostAliasOverride) Read(ctx p.Context, id string, inputs HostAliasOverrideArgs, _ HostAliasOverrideState) (canonicalID string, normalizedInputs HostAliasOverrideArgs, normalizedState HostAliasOverrideState, err error) {
-	ctx.Log(diag.Info, "Running READ")
+	ctx.Log(diag.Debug, "Running READ")
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
 	newArgs := OverridesAliasToHostAliasOverrideArgs(host)
@@ -92,10 +92,9 @@ func (h HostAliasOverride) Read(ctx p.Context, id string, inputs HostAliasOverri
 }
 
 func (h HostAliasOverride) Diff(ctx p.Context, id string, _ HostAliasOverrideState, new HostAliasOverrideArgs) (p.DiffResponse, error) {
-	ctx.Log(diag.Info, "Running DIFF")
+	ctx.Log(diag.Debug, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	result, err := overrides.Read(id)
-	ctx.Log(diag.Info, fmt.Sprintf("Retval: %+v", result))
 	details := result.Alias
 	if result == nil || details.Host == "" {
 		return p.DiffResponse{
@@ -106,31 +105,31 @@ func (h HostAliasOverride) Diff(ctx p.Context, id string, _ HostAliasOverrideSta
 	}
 	diffs := map[string]p.PropertyDiff{}
 	if details.Enabled.Bool() != *new.Enabled {
-		ctx.Log(diag.Info, fmt.Sprintf("Enabled differs: %t/%t", details.Enabled.Bool(), *new.Enabled))
+		ctx.Log(diag.Debug, fmt.Sprintf("Enabled differs: %t/%t", details.Enabled.Bool(), *new.Enabled))
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if details.Hostname != *new.Hostname {
-		ctx.Log(diag.Info, fmt.Sprintf("Hostname differs: %s/%s", details.Hostname, *new.Hostname))
+		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", details.Hostname, *new.Hostname))
 		diffs["hostname"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if details.Host != *new.Host {
-		ctx.Log(diag.Info, fmt.Sprintf("Host differs: %s/%s", details.Host, *new.Host))
+		ctx.Log(diag.Debug, fmt.Sprintf("Host differs: %s/%s", details.Host, *new.Host))
 		diffs["host"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if details.Domain != *new.Domain {
-		ctx.Log(diag.Info, fmt.Sprintf("Domain differs: %s/%s", details.Domain, *new.Domain))
+		ctx.Log(diag.Debug, fmt.Sprintf("Domain differs: %s/%s", details.Domain, *new.Domain))
 		diffs["domain"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if details.Description != *new.Description {
-		ctx.Log(diag.Info, fmt.Sprintf("Description differs: %s/%s", details.Description, *new.Description))
+		ctx.Log(diag.Debug, fmt.Sprintf("Description differs: %s/%s", details.Description, *new.Description))
 		diffs["description"] = p.PropertyDiff{
 			Kind: p.Update,
 		}

@@ -41,7 +41,7 @@ func (HostOverride) GetApi(ctx p.Context) gooverrides.OverridesHostsApi {
 }
 
 func (h HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs, preview bool) (string, HostOverrideState, error) {
-	ctx.Log(diag.Info, "Running CREATE")
+	ctx.Log(diag.Debug, "Running CREATE")
 	state := HostOverrideState{HostOverrideArgs: input}
 	if preview {
 		return name, state, nil
@@ -52,13 +52,13 @@ func (h HostOverride) Create(ctx p.Context, name string, input HostOverrideArgs,
 }
 
 func (h HostOverride) Delete(ctx p.Context, id string, _ HostOverrideState) error {
-	ctx.Log(diag.Info, "Running DELETE")
+	ctx.Log(diag.Debug, "Running DELETE")
 	err := h.deleteHostOverride(ctx, id)
 	return err
 }
 
 func (h HostOverride) Update(ctx p.Context, id string, _ HostOverrideState, news HostOverrideArgs, preview bool) (HostOverrideState, error) {
-	ctx.Log(diag.Info, "Running UPDATE")
+	ctx.Log(diag.Debug, "Running UPDATE")
 	if preview {
 		return HostOverrideState{
 			HostOverrideArgs: news,
@@ -74,7 +74,7 @@ func (h HostOverride) Update(ctx p.Context, id string, _ HostOverrideState, news
 }
 
 func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, _ HostOverrideState) (canonicalID string, normalizedInputs HostOverrideArgs, normalizedState HostOverrideState, err error) {
-	ctx.Log(diag.Info, "Running READ")
+	ctx.Log(diag.Debug, "Running READ")
 	overrides := h.GetApi(ctx)
 	host, err := overrides.Read(id)
 	newArgs := OverridesHostToHostOverrideArgs(host)
@@ -85,10 +85,9 @@ func (h HostOverride) Read(ctx p.Context, id string, inputs HostOverrideArgs, _ 
 }
 
 func (h HostOverride) Diff(ctx p.Context, id string, _ HostOverrideState, new HostOverrideArgs) (p.DiffResponse, error) {
-	ctx.Log(diag.Info, "Running DIFF")
+	ctx.Log(diag.Debug, "Running DIFF")
 	overrides := h.GetApi(ctx)
 	result, err := overrides.Read(id)
-	ctx.Log(diag.Info, fmt.Sprintf("Retval: %+v", result))
 	if result == nil || result.Host.Hostname == "" {
 		return p.DiffResponse{
 			DeleteBeforeReplace: true,
@@ -98,45 +97,45 @@ func (h HostOverride) Diff(ctx p.Context, id string, _ HostOverrideState, new Ho
 	}
 	diffs := map[string]p.PropertyDiff{}
 	if result.Host.Hostname != *new.Hostname {
-		ctx.Log(diag.Info, fmt.Sprintf("Hostname differs: %s/%s", result.Host.Hostname, *new.Hostname))
+		ctx.Log(diag.Debug, fmt.Sprintf("Hostname differs: %s/%s", result.Host.Hostname, *new.Hostname))
 		diffs["hostname"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if result.Host.Domain != *new.Domain {
-		ctx.Log(diag.Info, fmt.Sprintf("Domain differs: %s/%s", result.Host.Domain, *new.Domain))
+		ctx.Log(diag.Debug, fmt.Sprintf("Domain differs: %s/%s", result.Host.Domain, *new.Domain))
 		diffs["domain"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if result.Host.Description != *new.Description {
-		ctx.Log(diag.Info, fmt.Sprintf("Description differs: %s/%s", result.Host.Description, *new.Description))
+		ctx.Log(diag.Debug, fmt.Sprintf("Description differs: %s/%s", result.Host.Description, *new.Description))
 		diffs["description"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if result.Host.Enabled.Bool() != *new.Enabled {
-		ctx.Log(diag.Info, fmt.Sprintf("Enabled differs: %t/%t", result.Host.Enabled.Bool(), *new.Enabled))
+		ctx.Log(diag.Debug, fmt.Sprintf("Enabled differs: %t/%t", result.Host.Enabled.Bool(), *new.Enabled))
 		diffs["enabled"] = p.PropertyDiff{
 			Kind: p.Update,
 		}
 	}
 	if result.Host.Rr.String() == "A" {
 		if result.Host.Server != *new.Server {
-			ctx.Log(diag.Info, fmt.Sprintf("Server differs: %s/%s", result.Host.Server, *new.Server))
+			ctx.Log(diag.Debug, fmt.Sprintf("Server differs: %s/%s", result.Host.Server, *new.Server))
 			diffs["server"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
 	} else if result.Host.Rr.String() == "MX" {
 		if result.Host.Mx != *new.Mx {
-			ctx.Log(diag.Info, fmt.Sprintf("Mx differs: %s/%s", result.Host.Mx, *new.Mx))
+			ctx.Log(diag.Debug, fmt.Sprintf("Mx differs: %s/%s", result.Host.Mx, *new.Mx))
 			diffs["mx"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
 		}
 		if result.Host.Mxprio.Int() != *new.MxPrio {
-			ctx.Log(diag.Info, fmt.Sprintf("MxPrio differs: %d/%d", result.Host.Mxprio.Int(), *new.MxPrio))
+			ctx.Log(diag.Debug, fmt.Sprintf("MxPrio differs: %d/%d", result.Host.Mxprio.Int(), *new.MxPrio))
 			diffs["mxprio"] = p.PropertyDiff{
 				Kind: p.Update,
 			}
