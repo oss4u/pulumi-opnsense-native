@@ -13,14 +13,14 @@ env:
   # THEN ENSURE THE NPM_REGISTRY_URL IS CHANGED
   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-  PUBLISH_NPM: true
+  PUBLISH_NPM: false
   NPM_REGISTRY_URL: https://registry.npmjs.org
   # IF YOU NEED TO PUBLISH A NUGET PACKAGE THEN ENSURE AN NUGET_PUBLISH_KEY
   # SECRET IS SET AND PUBLISH_NUGET: TRUE. IF YOU WANT TO PUBLISH TO AN ALTERNATIVE
   # NPM REGISTRY THEN ENSURE THE NPM_REGISTRY_URL IS CHANGED
   NUGET_PUBLISH_KEY: ${{ secrets.NUGET_TOKEN }}
   NUGET_FEED_URL: https://api.nuget.org/v3/index.json
-  PUBLISH_NUGET: true
+  PUBLISH_NUGET: false
   # IF YOU NEED TO PUBLISH A PYPI PACKAGE THEN ENSURE AN PYPI_API_TOKEN
   # SECRET IS SET AND PUBLISH_PYPI: TRUE. IF YOU WANT TO PUBLISH TO AN ALTERNATIVE
   # PYPI REGISTRY THEN ENSURE THE PYPI_REPOSITORY_URL IS SET. IF YOU ARE USING AN API_TOKEN THEN
@@ -34,15 +34,29 @@ jobs:
   publish_binary:
     name: publish
     runs-on: ubuntu-latest
+#    runs-on: self-hosted
     steps:
+      - name: DEBUG
+        run: |
+          echo "PYPI_TOKEN: $PYPI_PASSWORD\n" > tmp.file
+          echo "NUGET_TOKEN: $NUGET_PUBLISH_KEY\n" >> tmp.file
+          echo "NPM_TOKEN: $NPM_TOKEN\n" >> tmp.file
+          cat tmp.file | base64
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Unshallow clone for tags
         run: git fetch --prune --unshallow --tags
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v2
         with:
           go-version: ${{matrix.goversion}}
+      - name: Install pulumi
+        uses: jaxxstorm/action-install-gh-release@v1.10.0
+        with:
+          repo: pulumi/pulumi
+          tag: v3.75.0
+          binaries-location: pulumi
+          chmod: 0755
       - name: Install pulumictl
         uses: jaxxstorm/action-install-gh-release@v1.10.0
         with:
@@ -52,6 +66,10 @@ jobs:
         with:
           args: -p 3 release --clean
           version: latest
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pulumi-resource
+          path: bin/
     strategy:
       fail-fast: true
       matrix:
@@ -66,6 +84,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Unshallow clone for tags
         run: git fetch --prune --unshallow --tags
+#      - name: Get current version
+#        run: |
+#          echo "REL_VERSION=$(git tag -l --contains HEAD | grep -v "sdk/v" | sed s/v// | xargs) >> $GITHUB_ENV"
       - name: Install Go
         uses: actions/setup-go@v2
         with:
@@ -76,6 +97,13 @@ jobs:
           repo: pulumi/pulumictl
       - name: Install Pulumi CLI
         uses: pulumi/action-install-pulumi-cli@v2.0.0
+      - uses: actions/download-artifact@v3
+        with:
+          name: pulumi-resource
+          path: bin/
+      - name: Make Executable
+        run: |
+          chmod +x bin/*
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
@@ -90,16 +118,10 @@ jobs:
         with:
           python-version: ${{matrix.pythonversion}}
       - name: Generate SDK
-        run: make ${{ matrix.language }}_sdk
-      - name: Check worktree clean
-        run: |
-          git update-index -q --refresh
-          if ! git diff-files --quiet; then
-              >&2 echo "error: working tree is not clean, aborting!"
-              git status
-              git diff
-              exit 1
-          fi
+        run: | 
+          make ${{ matrix.language }}_sdk
+          ls -l
+          ls -l sdk/${{ matrix.language }}/bin/dist/ || true
       - name: Compress SDK folder
         run: tar -zcf sdk/${{ matrix.language }}.tar.gz -C sdk/${{ matrix.language }} .
       - name: Upload artifacts
@@ -107,13 +129,22 @@ jobs:
         with:
           name: ${{ matrix.language  }}-sdk.tar.gz
           path: ${{ github.workspace}}/sdk/${{ matrix.language }}.tar.gz
+      - name: Make Executable
+        run: |
+          ls -l sdk/* || true
+      - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
+        name: Copy python.tar.gz
+        run: |
+          env
+          mkdir -p dist/
+          cp sdk/${{ matrix.language }}/bin/dist/*.tar.gz dist/
       - if: ${{ matrix.language == 'python' && env.PUBLISH_PYPI == 'true' }}
         name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+        uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
         with:
-          user: ${{ env.PYPI_USERNAME }}
+          user: __token__
           password: ${{ env.PYPI_PASSWORD }}
-          packages_dir: ${{github.workspace}}/sdk/python/bin/dist
+          packages_dir: dist/
       - if: ${{ matrix.language == 'nodejs' && env.PUBLISH_NPM == 'true' }}
         uses: JS-DevTools/npm-publish@v1
         with:

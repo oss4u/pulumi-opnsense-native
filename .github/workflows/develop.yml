@@ -11,6 +11,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+#    runs-on: self-hosted
     name: check conventional commit compliance
     strategy:
       fail-fast: true
@@ -28,7 +29,7 @@ jobs:
 #      - name: Unshallow clone for tags
 #        run: git fetch --prune --unshallow --tags
       - name: Install Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v3
         with:
           go-version: ${{matrix.goversion}}
           cache: true

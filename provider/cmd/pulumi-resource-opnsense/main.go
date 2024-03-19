@@ -15,73 +15,63 @@
 package main
 
 import (
-	"math/rand"
-	"time"
-
+	"fmt"
+	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/config"
+	"github.com/oss4u/pulumi-opnsense-native/cmd/pulumi-resource-opnsense/core/unbound"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
+	"github.com/pulumi/pulumi-go-provider/middleware/schema"
+	"os"
 )
 
 // Version is initialized by the Go linker to contain the semver of this build.
 var Version string
 
 func main() {
-	p.RunProvider("opnsense", Version,
-		// We tell the provider what resources it needs to support.
-		// In this case, a single custom resource.
-		infer.Provider(infer.Options{
-			Resources: []infer.InferredResource{
-				infer.Resource[Random, RandomArgs, RandomState](),
-				infer.Resource[HostOverride, HostOverrideArgs, HostOverrideState](),
+	err := p.RunProvider("opnsense", Version, provider())
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
+		os.Exit(1)
+	}
+}
+
+func provider() p.Provider {
+	prv := infer.Provider(infer.Options{
+		Metadata: schema.Metadata{
+			DisplayName: "Opnsense",
+			License:     "Apache-2.0",
+			Repository:  "https://github.com/oss4u/pulumi-opnsense-native",
+			Publisher:   "Oss4u",
+			LanguageMap: map[string]any{
+				"nodejs": map[string]any{
+					"packageName": "@oss4u/opnsense",
+				},
+				"go": map[string]any{
+					"generateResourceContainerTypes": true,
+					"importBasePath":                 "github.com/oss4u/pulumi-opnsense-native/sdk/go/opnsense",
+				},
+				"csharp": map[string]any{
+					"rootNamespace": "Oss4u",
+				},
 			},
-		}))
+			PluginDownloadURL: "github://api.github.com/oss4u/pulumi-opnsense-native",
+		},
+		Resources: []infer.InferredResource{
+			infer.Resource[unbound.HostAliasOverride, unbound.HostAliasOverrideArgs, unbound.HostAliasOverrideState](),
+			infer.Resource[unbound.HostOverride, unbound.HostOverrideArgs, unbound.HostOverrideState](),
+		},
+		Config: infer.Config[*config.Config](),
+	})
+	prv.DiffConfig = diff()
+	return prv
 }
 
-// Each resource has a controlling struct.
-// Resource behavior is determined by implementing methods on the controlling struct.
-// The `Create` method is mandatory, but other methods are optional.
-// - Check: Remap inputs before they are typed.
-// - Diff: Change how instances of a resource are compared.
-// - Update: Mutate a resource in place.
-// - Read: Get the state of a resource from the backing provider.
-// - Delete: Custom logic when the resource is deleted.
-// - Annotate: Describe fields and set defaults for a resource.
-// - WireDependencies: Control how outputs and secrets flows through values.
-type Random struct{}
-
-// Each resource has in input struct, defining what arguments it accepts.
-type RandomArgs struct {
-	// Fields projected into Pulumi must be public and hava a `pulumi:"..."` tag.
-	// The pulumi tag doesn't need to match the field name, but its generally a
-	// good idea.
-	Length int `pulumi:"length"`
-}
-
-// Each resource has a state, describing the fields that exist on the created resource.
-type RandomState struct {
-	// It is generally a good idea to embed args in outputs, but it isn't strictly necessary.
-	RandomArgs
-	// Here we define a required output called result.
-	Result string `pulumi:"result"`
-}
-
-// All resources must implement Create at a minumum.
-func (Random) Create(ctx p.Context, name string, input RandomArgs, preview bool) (string, RandomState, error) {
-	state := RandomState{RandomArgs: input}
-	if preview {
-		return name, state, nil
+func diff() func(ctx p.Context, req p.DiffRequest) (p.DiffResponse, error) {
+	return func(ctx p.Context, req p.DiffRequest) (p.DiffResponse, error) {
+		return p.DiffResponse{
+			DeleteBeforeReplace: false,
+			HasChanges:          false,
+			DetailedDiff:        nil,
+		}, nil
 	}
-	state.Result = makeRandom(input.Length)
-	return name, state, nil
-}
-
-func makeRandom(length int) string {
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
-	charset := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-
-	result := make([]rune, length)
-	for i := range result {
-		result[i] = charset[seededRand.Intn(len(charset))]
-	}
-	return string(result)
 }

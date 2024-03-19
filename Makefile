@@ -1,28 +1,38 @@
-PROJECT_NAME := Pulumi opnsense Resource Provider
+PROJECT_NAME := Pulumi Opnsense Resource Provider
 
 PACK             := opnsense
 PACKDIR          := sdk
-PROJECT          := github.com/pulumi/pulumi-opnsense
-NODE_MODULE_NAME := @pulumi/opnsense
-NUGET_PKG_NAME   := Pulumi.opnsense
+PROJECT          := github.com/oss4u/pulumi-opnsense-native
+NODE_MODULE_NAME := @oss4u/opnsense
+NUGET_PKG_NAME   := Oss4u.opnsense
 
 PROVIDER        := pulumi-resource-${PACK}
 VERSION         ?= $(shell pulumictl get version)
 PROVIDER_PATH   := provider
 VERSION_PATH     := ${PROVIDER_PATH}/cmd/main.Version
+SCHEMA_PATH      := ${PROVIDER_PATH}/cmd/${PROVIDER}/schema.json
 
 GOPATH			:= $(shell go env GOPATH)
 
 WORKING_DIR     := $(shell pwd)
 TESTPARALLELISM := 4
 
+gen_schema:
+	pulumi package get-schema ./bin/pulumi-resource-opnsense > $(SCHEMA_PATH) && jq -r 'del(.version)' $(SCHEMA_PATH) > $(SCHEMA_PATH).new && mv $(SCHEMA_PATH).new $(SCHEMA_PATH)
+
 ensure::
 	cd provider && go mod tidy
 	cd sdk && go mod tidy
-	cd tests && go mod tidy
+#	cd tests && go mod tidy
 
-provider::
-	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
+provider: build_provider # gen_schema
+
+build_provider::
+	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X main.Version=${VERSION}" ./cmd/$(PROVIDER))
+#	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" ./cmd/$(PROVIDER))
+
+#provider::
+#	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
 
 provider_debug::
 	(cd provider && go build -o $(WORKING_DIR)/bin/${PROVIDER} -gcflags="all=-N -l" -ldflags "-X ${PROJECT}/${VERSION_PATH}=${VERSION}" $(PROJECT)/${PROVIDER_PATH}/cmd/$(PROVIDER))
